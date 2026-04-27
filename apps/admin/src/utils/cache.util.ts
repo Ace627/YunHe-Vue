@@ -36,7 +36,7 @@ export class CacheUtil {
   /**
    * 清除所有缓存
    */
-  static clear() {
+  static flushall() {
     localStorage.clear()
   }
 
@@ -44,8 +44,11 @@ export class CacheUtil {
    * 获取所有缓存键
    * @returns {string[]} 缓存键数组
    */
-  static keys(): string[] {
-    return Object.keys(localStorage)
+  static keys(pattern: string = '*'): string[] {
+    const allKeys = Object.keys(localStorage)
+    const regexPattern = pattern.replace(/\*/g, '.*')
+    const regex = new RegExp(`^${regexPattern}$`)
+    return allKeys.filter((key) => regex.test(key))
   }
 
   /**
@@ -55,5 +58,36 @@ export class CacheUtil {
    */
   static exists(key: string): boolean {
     return this.get(key) !== null
+  }
+
+  /**
+   * 获取缓存剩余过期时间（秒）
+   * -1 = 永久有效
+   * -2 = 已过期/不存在
+   */
+  static ttl(key: string): number {
+    try {
+      const item = localStorage.getItem(key)
+      if (!item) return -2
+      const data = JSON.parse(item)
+      if (data.ttl === -1) return -1
+      const remaining = data.ttl - Date.now()
+      return remaining > 0 ? Math.floor(remaining / 1000) : -2
+    } catch {
+      return -2 // 解析失败，视为无效缓存
+    }
+  }
+
+  /**
+   * 动态设置缓存过期时间
+   * @param key 缓存键
+   * @param ttl 过期时间（秒）
+   * @returns 是否设置成功
+   */
+  static expire(key: string, ttl: number): boolean {
+    const value = this.get(key)
+    if (value === null) return false
+    this.set(key, value, ttl)
+    return true
   }
 }
