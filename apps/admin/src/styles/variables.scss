@@ -1,0 +1,20 @@
+:root {
+  --el-sidebar-width: 220px;
+  --el-sidebar-hide-width: 64px;
+  --el-sidebar-item-height: 42px;
+  --el-sidebar-font-size: 14px;
+  --el-sidebar-icon-size: 1.32em;
+  --el-sidebar-text-color: var(--el-color-white);
+  --el-sidebar-bg-color: #1a1f2e;
+  --el-sidebar-nested-bg-color: #171a22;
+  --el-sidebar-hover-text-color: var(--el-color-white);
+  --el-sidebar-hover-bg-color: var(--el-overlay-color-lighter);
+  --el-sidebar-active-text-color: var(--el-color-white);
+  --el-sidebar-active-bg-color: var(--el-color-primary-dark-2);
+  --el-sidebar-index: 1001;
+
+  --el-navbar-height: 50px;
+  --el-navbar-bg-color: #ffffff;
+
+  --el-tags-view-height: 34px;
+}

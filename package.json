@@ -1,0 +1,27 @@
+{
+  "name": "yunhe-vue",
+  "version": "1.0.0",
+  "description": "基于 NestJS、Vue3、TypeScript 构建的企业级全栈后台系统模板，专为前端开发者打造，开箱即用，快速上手全栈开发",
+  "packageManager": "pnpm@10.33.2",
+  "license": "MIT",
+  "author": {
+    "name": "当时只道是寻常",
+    "email": "1207588603@qq.com"
+  },
+  "scripts": {
+    "dev:server": "pnpm --filter server start:dev",
+    "build:server": "pnpm --filter server build:encrypt",
+    "dev:admin": "pnpm --filter admin dev",
+    "build:admin": "pnpm --filter admin build",
+    "svg:clean": "esno ./scripts/svg-clean.ts"
+  },
+  "dependencies": {
+    "axios": "1.15.2",
+    "dayjs": "1.11.20"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.0",
+    "esno": "4.8.0",
+    "typescript": "6.0.3"
+  }
+}

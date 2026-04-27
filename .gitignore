@@ -1,0 +1,10 @@
+dist
+node_modules
+
+# 其他包管理器锁文件（本项目用 pnpm，这些都可以忽略）
+package-lock.json
+yarn.lock
+
+# 环境与敏感配置
+*.local
+*.local.yaml

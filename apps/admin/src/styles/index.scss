@@ -1,0 +1,16 @@
+@use './variables.scss';
+@use './transition.scss';
+@use 'nprogress/nprogress.css';
+@use './element-plus/el-card.scss';
+@use './element-plus/el-table.scss';
+@use './element-plus/el-dialog.scss';
+@use './element-plus/el-dropdown.scss';
+
+body {
+  font-family: var(--el-font-family);
+  background-color: var(--el-bg-color-page);
+}
+
+#nprogress .bar {
+  background-color: var(--el-color-primary);
+}

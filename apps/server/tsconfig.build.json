@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // 指定项目根目录，用于计算相对路径
+    "rootDir": "./src"
+  },
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}

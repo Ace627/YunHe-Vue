@@ -1,0 +1,118 @@
+<html lang='zh-CN'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>验证码</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        background-color: #f7f8fa;
+      }
+      .container {
+        padding: 40px 0;
+        text-align: center;
+      }
+      .email-card {
+        width: 500px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      }
+      .header {
+        padding: 32px 32px 20px;
+        text-align: center;
+      }
+      .header h2 {
+        margin: 0;
+        font-size: 20px;
+        color: #1d2129;
+        font-weight: 500;
+      }
+      .code-section {
+        padding: 20px 32px;
+        text-align: center;
+      }
+      .code {
+        display: inline-block;
+        padding: 16px 32px;
+        background-color: #f5f7fa;
+        border-radius: 8px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #165dff;
+        letter-spacing: 6px;
+      }
+      .info {
+        padding: 0 32px 28px;
+        text-align: center;
+        font-size: 14px;
+        color: #4e5969;
+        line-height: 1.6;
+      }
+      .divider {
+        padding: 0 32px;
+      }
+      .divider-line {
+        height: 1px;
+        background-color: #e5e6eb;
+      }
+      .footer {
+        padding: 20px 32px 32px;
+        font-size: 12px;
+        color: #86909c;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <table width='100%' cellpadding='0' cellspacing='0' bgcolor='#f7f8fa'>
+      <tr>
+        <td class='container'>
+          <table class='email-card' cellpadding='0' cellspacing='0'>
+            <!-- 头部 -->
+            <tr>
+              <td class='header'>
+                <h2>账号安全验证</h2>
+              </td>
+            </tr>
+
+            <!-- 验证码 -->
+            <tr>
+              <td class='code-section'>
+                <div class='code'>{{code}}</div>
+              </td>
+            </tr>
+
+            <!-- 说明 -->
+            <tr>
+              <td class='info'>
+                该验证码
+                {{expiresIn}}
+                分钟内有效<br />
+                请勿向任何人泄露此验证码
+              </td>
+            </tr>
+
+            <!-- 分割线 -->
+            <tr>
+              <td class='divider'>
+                <div class='divider-line'></div>
+              </td>
+            </tr>
+
+            <!-- 底部 -->
+            <tr>
+              <td class='footer'>
+                本邮件由系统自动发送，请勿直接回复
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

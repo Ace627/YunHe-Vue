@@ -1,0 +1,77 @@
+{
+  /**
+   * 继承 Vue 官方预设的 DOM 环境 TS 配置
+   * @vue/tsconfig/tsconfig.dom.json 包含了浏览器/DOM 环境的基础 TS 配置（如 lib: ["ESNext", "DOM"]），无需重复配置
+   */
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    /**
+     * TS 构建信息缓存文件路径
+     * 作用：存储增量编译的缓存信息，加快后续构建速度（Vite/TSC 复用缓存）
+     * 路径：临时存放在 node_modules/.tmp 下，避免污染源码目录
+     */
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    /**
+     * 引入的全局类型声明文件
+     * "vite/client"：提供 Vite 内置的 import.meta.env、import.meta.glob 等全局变量的类型声明
+     * 补充：若有其他全局类型（如 Element Plus），可添加到数组中，如 ["vite/client", "element-plus/global"]
+     */
+    "types": ["vite/client"],
+
+    /**
+     * 编译目标库（ECMAScript 版本）
+     * 作用：指定编译后的 JS 代码支持的浏览器版本，避免使用不支持的语法
+     * 建议：根据目标浏览器版本选择合适的库，如 ["ESNext", "DOM", "DOM.Iterable"]
+     */
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+
+    /**
+     * 路径别名配置（简化模块导入路径）
+     * @description 映射自定义别名到实际目录，避免冗长的相对路径导入
+     * @note 需配合 Vite 配置文件中的 resolve.alias 同步配置，否则运行时会报错
+     */
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    /**
+     * 启用所有严格的类型检查选项（核心开关）
+     * 包含：strictNullChecks（严格空值检查）、strictFunctionTypes（严格函数类型）等，是 TS 类型安全的基础
+     */
+    "strict": true,
+
+    /**
+     * 禁止声明未使用的局部变量
+     * 作用：避免代码中存在无用变量，减少冗余
+     */
+    "noUnusedLocals": true,
+
+    /**
+     * 禁止声明未使用的函数参数
+     * 作用：避免函数参数定义后未使用，提升代码整洁度
+     */
+    "noUnusedParameters": true,
+
+    /**
+     * 仅允许使用可擦除的语法（如装饰器、JSX 等）
+     * 作用：确保使用的 TS 语法能被编译为合法的 JS，避免语法兼容问题
+     */
+    "erasableSyntaxOnly": true,
+
+    /**
+     * 禁止 switch 语句中出现未处理的 case 穿透
+     * 作用：避免 switch 中忘记写 break/return 导致的逻辑错误
+     */
+    "noFallthroughCasesInSwitch": true,
+
+    /**
+     * 检查导入语句的副作用，禁止未检查的副作用导入
+     * 作用：避免导入无意义的副作用模块（如 import 'xxx' 但无实际作用），提升代码可维护性
+     */
+    "noUncheckedSideEffectImports": true
+  },
+
+  // 定义希望被编译的文件所在的目录 ** 代表任意目录 * 代表任意文件
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.d.ts"]
+}

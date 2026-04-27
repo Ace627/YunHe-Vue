@@ -1,0 +1,76 @@
+<html lang='zh-CN'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>系统通知</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        background-color: #f7f8fa;
+        padding: 30px 0;
+        line-height: 1.6;
+      }
+
+      .email-wrapper {
+        max-width: 580px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+      }
+
+      .email-header {
+        padding: 24px 32px;
+        border-bottom: 1px solid #f2f3f5;
+      }
+
+      .email-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #1d2129;
+      }
+
+      .email-body {
+        padding: 32px;
+        font-size: 15px;
+        color: #4e5969;
+      }
+
+      .email-content {
+        line-height: 1.8;
+        word-wrap: break-word;
+      }
+
+      .email-footer {
+        padding: 20px 32px;
+        text-align: center;
+        font-size: 12px;
+        color: #86909c;
+        background-color: #fafafa;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class='email-wrapper'>
+      <div class='email-header'>
+        <div class='email-title'>{{title}}</div>
+      </div>
+
+      <div class='email-body'>
+        <div class='email-content'>{{{content}}}</div>
+      </div>
+
+      <div class='email-footer'>
+        本邮件由系统自动发送，请勿直接回复
+      </div>
+    </div>
+  </body>
+</html>

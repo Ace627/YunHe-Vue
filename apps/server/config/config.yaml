@@ -1,0 +1,43 @@
+# 服务器相关配置
+server:
+  port: 13579 # 服务器监听端口（客户端请求需访问此端口）
+  globalPrefix: 'api' # 全局路由前缀（所有接口路径会自动添加此前缀，如访问接口实际路径为 /api/xxx）
+  isDemo: false # 是否演示环境
+
+# 数据库相关配置
+database:
+  host: '127.0.0.1' # 数据库服务器地址（本地数据库填写 127.0.0.1，远程数据库填写对应 IP 或域名）
+  port: 3306 # 数据库服务器端口（MySQL 默认端口为 3306）
+  username: 'root' # 连接数据库的用户名（需拥有对应数据库的操作权限）
+  password: 'root123456' # 连接数据库的密码（与用户名对应）
+  database: 'yunhe' # 要连接的具体数据库名称
+  charset: 'utf8mb4_unicode_ci' # 数据库字符集（支持中文）
+  synchronize: false # 数据库结构自动同步开关（true 时启动时自动创建表结构，生产环境必须设为 false，避免数据丢失）
+
+# Redis 缓存相关配置
+redis:
+  host: '127.0.0.1'
+  port: 6379
+  password: 'redispassword'
+  db: 0
+
+# JWT 身份认证相关配置
+jwt:
+  secret: 80464BA1E96A7A86941B13AE69431E1A # Token 加密密钥（需保密，建议生产环境使用复杂随机字符串）
+  expiresIn: 1800 # Token 在 Redis 中的有效期（单位：秒，1800 秒 = 30 分钟，过期后需重新获取）
+
+# 邮件相关配置
+email:
+  from: '123@qq.com' # 发件邮箱（需在 QQ 邮箱设置中开启 SMTP 功能）
+  host: 'smtp.qq.com' # SMTP 服务器地址（smtp.qq.com）
+  port: 465 # 465 端口
+  secure: true # 是否开启 SSL 加密（true = 465，false = 587）
+  code: '123456' # 授权码（不是邮箱密码！需在邮箱设置中开启 SMTP 功能后获取）
+
+# OpenAI API 相关配置
+openai:
+  apiKey: sk- # OpenAI API 密钥（需从 OpenAI 平台获取）
+  model: 'deepseek-chat' # 模型名称（根据实际情况调整）
+  baseURL: https://api.openai.com/v1 # OpenAI API 基础 URL（根据实际情况调整）
+  temperature: 0.7 # 温度参数，控制生成文本的随机性（0-1之间，0为确定性，1为随机性）
+  maxTokens: 1024 # 最大生成令牌数（每个请求最大生成的字符数，建议根据模型能力调整）
