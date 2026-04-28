@@ -1,12 +1,13 @@
 import { defineConfig, loadEnv } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import UnoCSS from 'unocss/vite' // Vite Plugins
 import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import AutoImport from 'unplugin-auto-import/vite'
 import ElementPlus from 'unplugin-element-plus/vite'
 import AutoComponents from 'unplugin-vue-components/vite'
-import UnoCSS from 'unocss/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://cn.vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -21,6 +22,8 @@ export default defineConfig(({ mode }) => {
     plugins: [
       // 提供 Vue 3 单文件组件支持
       vue(),
+      /** 提供 Vue 3 JSX/TSX 支持 */
+      vueJsx(),
       // 即时按需的原子化 CSS 引擎 UnoCSS
       UnoCSS({ inspector: false }),
       // Element Plus 样式自动按需导入

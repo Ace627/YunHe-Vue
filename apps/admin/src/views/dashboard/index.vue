@@ -52,7 +52,7 @@
         <el-card>
           <template #header>更新日志</template>
           <el-collapse accordion>
-            <el-collapse-item title="v1.0.0 - 2026-04-23">
+            <el-collapse-item title="v1.0.0 - 2026-04-27">
               <ol>
                 <li>1、云禾前后端分离系统正式发布</li>
               </ol>
