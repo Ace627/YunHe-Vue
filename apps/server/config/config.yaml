@@ -1,12 +1,12 @@
 # 服务器相关配置
 server:
-  port: 13579 # 服务器监听端口（客户端请求需访问此端口）
+  port: 3000 # 服务器监听端口（客户端请求需访问此端口）
   globalPrefix: 'api' # 全局路由前缀（所有接口路径会自动添加此前缀，如访问接口实际路径为 /api/xxx）
   isDemo: false # 是否演示环境
 
 # 数据库相关配置
 database:
-  host: '127.0.0.1' # 数据库服务器地址（本地数据库填写 127.0.0.1，远程数据库填写对应 IP 或域名）
+  host: 'mysql' # 数据库服务器地址（本地数据库填写 127.0.0.1，远程数据库填写对应 IP 或域名）
   port: 3306 # 数据库服务器端口（MySQL 默认端口为 3306）
   username: 'root' # 连接数据库的用户名（需拥有对应数据库的操作权限）
   password: 'root123456' # 连接数据库的密码（与用户名对应）
@@ -16,7 +16,7 @@ database:
 
 # Redis 缓存相关配置
 redis:
-  host: '127.0.0.1'
+  host: 'redis'
   port: 6379
   password: 'redispassword'
   db: 0

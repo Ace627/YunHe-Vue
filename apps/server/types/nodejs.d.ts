@@ -17,5 +17,8 @@ declare namespace NodeJS {
      * - 用途：根据不同环境执行不同的配置或逻辑，如日志级别、数据库连接等
      */
     NODE_ENV: 'development' | 'production'
+
+    // 适配 Docker 环境注入
+    [key: string]: string
   }
 }

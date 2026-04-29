@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { linkDownload, TipModal, copyText } from '@/utils'
+import { linkDownload, copyText } from '@/utils'
 
 const list = ref<string[]>([])
 const name = ref<string>('')

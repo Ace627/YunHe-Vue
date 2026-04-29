@@ -1,6 +1,6 @@
 import { load } from 'js-yaml'
-import { merge } from 'lodash'
 import { resolve } from 'node:path'
+import { merge } from 'lodash'
 import { readFileSync, existsSync } from 'node:fs'
 
 /**
@@ -31,8 +31,9 @@ export function configuration() {
   // 确定配置文件的存放目录
   //  - 开发环境: 读取项目根目录下的 config 文件夹
   //  - 生产环境: 直接读取当前文件所在的目录
-  //  - 未指定环境: 读取项目根目录下的 config 文件夹
-  const CONFIG_DIR_PATH = !NODE_ENV || NODE_ENV === 'development' ? resolve(process.cwd(), 'config') : __dirname
+  //  - 未指定环境: 直接读取当前文件所在的目录
+  const CONFIG_DIR_PATH = NODE_ENV === 'development' ? resolve(process.cwd(), 'config') : __dirname
+  // const CONFIG_DIR_PATH = !NODE_ENV || NODE_ENV === 'development' ? resolve(process.cwd(), 'config') : __dirname
 
   // 定义各类配置文件的路径
   // 通用配置文件（所有环境共享的基础配置）
@@ -57,6 +58,32 @@ export function configuration() {
   // 这样既保证了基础配置的通用性，又允许环境和本地配置进行个性化定制
   const finalConfig = merge({}, COMMON_CONFIG, COMMON_CONFIG_LOCAL, ENV_CONFIG, ENV_CONFIG_LOCAL)
 
+  adaptDockerEnv(finalConfig)
+
   // 返回合并后的完整配置，供 NestJS ConfigModule 使用
   return finalConfig
+}
+
+function adaptDockerEnv(finalConfig: Record<string, any>) {
+  const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DATABASE } = process.env
+  if (MYSQL_USERNAME) finalConfig.database.username = MYSQL_USERNAME
+  if (MYSQL_PASSWORD) finalConfig.database.password = MYSQL_PASSWORD
+  if (MYSQL_DATABASE) finalConfig.database.database = MYSQL_DATABASE
+
+  const { REDIS_PASSWORD } = process.env
+  if (REDIS_PASSWORD) finalConfig.redis.password = REDIS_PASSWORD
+
+  const { EMAIL_FROM, EMAIL_HOST, EMAIL_PORT, EMAIL_CODE, EMAIL_SECURE } = process.env
+  if (EMAIL_FROM) finalConfig.email.from = EMAIL_FROM
+  if (EMAIL_HOST) finalConfig.email.host = EMAIL_HOST
+  if (EMAIL_PORT) finalConfig.email.port = Number(EMAIL_PORT)
+  if (EMAIL_CODE) finalConfig.email.code = EMAIL_CODE
+  if (EMAIL_SECURE) finalConfig.email.secure = EMAIL_SECURE === 'true'
+
+  const { OPENAI_API_KEY, OPENAI_API_MODEL, OPENAI_API_BASE_URL, OPENAI_API_TEMPERATURE, OPENAI_API_MAX_TOKENS } = process.env
+  if (OPENAI_API_KEY) finalConfig.openai.apiKey = OPENAI_API_KEY
+  if (OPENAI_API_MODEL) finalConfig.openai.model = OPENAI_API_MODEL
+  if (OPENAI_API_BASE_URL) finalConfig.openai.baseURL = OPENAI_API_BASE_URL
+  if (OPENAI_API_TEMPERATURE) finalConfig.openai.temperature = Number(OPENAI_API_TEMPERATURE)
+  if (OPENAI_API_MAX_TOKENS) finalConfig.openai.maxTokens = Number(OPENAI_API_MAX_TOKENS)
 }

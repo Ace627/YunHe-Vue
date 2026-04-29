@@ -1,0 +1,52 @@
+# ==================== 阶段 1：构建 ====================
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+# 复制依赖清单（利用缓存）
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY apps/server/package.json ./apps/server/
+
+# 安装全部依赖（含 dev）
+RUN corepack enable && pnpm install --frozen-lockfile
+
+# 复制源码并构建
+COPY apps/server/ ./apps/server/
+RUN pnpm run build:server
+
+# ==================== 阶段 2：提取部署包 ====================
+FROM node:22-alpine AS deployer
+WORKDIR /tmp/build
+
+# 提供 workspace 描述文件和 server 包的元数据
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/.npmrc ./
+COPY --from=builder /app/apps/server/package.json ./apps/server/package.json
+
+# 通过 pnpm deploy 将 server 的生产依赖平铺到 /deploy
+RUN corepack enable && pnpm deploy --filter=server --prod --legacy /deploy
+
+# 将构建产物合并到 /deploy（保证 main.js、config.yaml 等存在）
+COPY --from=builder /app/apps/server/dist/ /deploy/
+
+# ==================== 阶段 3：最终运行镜像 ====================
+FROM node:22-alpine
+WORKDIR /app
+
+# 先创建用户和组
+RUN addgroup -S nodejs && adduser -S nestuser -G nodejs
+
+# ✅ 关键修复：只保留一条 COPY 指令，并带上 --chown 赋权
+COPY --from=deployer --chown=nestuser:nodejs /deploy .
+COPY --chown=nestuser:nodejs scripts/healthcheck.js ./healthcheck.js
+
+# ✅ 关键修复：合并 RUN 指令，在同一层完成目录创建与缓存清理
+RUN mkdir -p /app/logs && \
+    chown nestuser:nodejs /app/logs && \
+    rm -rf /tmp/* /root/.npm /root/.cache
+
+# 最后切换到非 root 用户
+USER nestuser
+
+# 暴露端口
+EXPOSE 3000
+
+CMD ["node", "main.js"]

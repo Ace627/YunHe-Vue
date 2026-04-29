@@ -14,7 +14,7 @@
         <div class="tech-section">
           <h3 class="tech-section__title">通用技术</h3>
           <div class="tech-cards">
-            <a v-for="tech in commonTech" :key="tech.name" :href="tech.url" target="_blank" class="tech-card tech-card--common">
+            <a v-for="tech in techs.common" :key="tech.name" :href="tech.url" target="_blank" class="tech-card tech-card--common">
               <span class="tech-card__name">{{ tech.name }}</span>
             </a>
           </div>
@@ -22,7 +22,7 @@
         <div class="tech-section">
           <h3 class="tech-section__title">前端技术</h3>
           <div class="tech-cards">
-            <a v-for="tech in frontTech" :key="tech.name" :href="tech.url" target="_blank" class="tech-card tech-card--frontend">
+            <a v-for="tech in techs.frontend" :key="tech.name" :href="tech.url" target="_blank" class="tech-card tech-card--frontend">
               <span class="tech-card__name">{{ tech.name }}</span>
             </a>
           </div>
@@ -30,7 +30,7 @@
         <div class="tech-section">
           <h3 class="tech-section__title">后端技术</h3>
           <div class="tech-cards">
-            <a v-for="tech in backTech" :key="tech.name" :href="tech.url" target="_blank" class="tech-card tech-card--backend">
+            <a v-for="tech in techs.backend" :key="tech.name" :href="tech.url" target="_blank" class="tech-card tech-card--backend">
               <span class="tech-card__name">{{ tech.name }}</span>
             </a>
           </div>
@@ -41,11 +41,10 @@
     <el-row class="mt-16px" :gutter="16">
       <el-col :span="8" :xs="24">
         <el-card>
-          <template #header>联系信息</template>
-          <div class="cursor-pointer flex items-center gap-4px">
-            <span>QQ群：1041747918</span>
-            <SvgIcon name="Copy" @click="copyText('1041747918')" />
-          </div>
+          <template #header>联系信息（QQ群）</template>
+          <a :href="qqGroup.link" target="_blank" class="cursor-pointer flex items-center gap-4px" v-for="qqGroup in qqGroupList" :key="qqGroup.code">
+            <img :src="qqGroup.icon" alt="" />
+          </a>
         </el-card>
       </el-col>
       <el-col :span="8" :xs="24">
@@ -72,41 +71,14 @@
 
 <script setup lang="ts">
 defineOptions({ name: 'Dashboard' })
-import { TipModal, copyText } from '@/utils'
+import { techs } from './techs'
 
-const commonTech = [
-  { name: 'Lodash', url: 'http://www.lodashjs.com' },
-  { name: 'DayJS', url: 'https://dayjs.fenxianglu.cn' },
-  { name: 'Axios', url: 'https://www.axios-http.cn/docs/intro' },
-  { name: 'TypeScript', url: 'https://typescript.p2hp.com' },
-]
-const frontTech = [
-  { name: 'Vue3', url: 'https://cn.vuejs.org/guide/introduction' },
-  { name: 'VueRouter', url: 'https://router.vuejs.org/zh' },
-  { name: 'Pinia', url: 'https://pinia.vuejs.org/zh' },
-  { name: 'ElementPlus', url: 'https://element-plus.org/zh-CN' },
-  { name: 'UnoCSS', url: 'https://unocss.nodejs.cn' },
-  { name: 'Canvas', url: 'https://www.canvasapi.cn' },
-  { name: 'ECharts', url: 'https://echarts.apache.org/zh/index.html' },
-  { name: 'VueUse', url: 'https://vueuse.zhcndoc.com' },
-  { name: 'IconFont', url: 'https://www.iconfont.cn' },
-  { name: 'NProgress', url: 'https://juejin.cn/post/7631483990629613604' },
-  { name: 'Markdown', url: 'https://imzbf.github.io/md-editor-v3/zh-CN' },
-  { name: 'Vite', url: 'https://cn.vitejs.dev/config' },
-]
-const backTech = [
-  { name: 'NestJS', url: 'https://docs.nestjs.com' },
-  { name: 'TypeORM', url: 'https://www.typeorm.net' },
-  { name: 'MySQL', url: 'https://www.mysql.com/downloads' },
-  { name: 'Redis', url: 'https://redis.io/docs/latest/commands' },
-  { name: 'SvgCaptcha', url: 'https://github.com/produck/svg-captcha/blob/1.x/README_CN.md' },
-  { name: 'ExcelJS', url: 'https://github.com/exceljs/exceljs/blob/HEAD/README_zh.md' },
-  { name: 'Winston', url: 'https://github.com/winstonjs/winston/blob/master/README.md' },
-  { name: 'nodemailer', url: 'https://nodemailer.com' },
-  { name: 'systeminformation', url: 'https://systeminformation.io' },
-  { name: 'argon2', url: 'https://github.com/ranisalt/node-argon2#readme' },
-  { name: 'ip2region', url: 'https://github.com/sonofmagic/node-ip2region#readme' },
-  { name: 'RBAC', url: 'https://juejin.cn/post/7359086041796968482' },
+const qqGroupList = [
+  {
+    code: '1041747918',
+    icon: 'https://img.shields.io/badge/开放-1041747918-blue.svg',
+    link: 'http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=nipJqdnRrHgP7jjLJzbuGwyayLaqrrVA&authKey=MuJj6WXuUP4QQTvs4fMAx1Pw4skUXSLYbvXVXi2X878%2FhmgrD1dxd%2BaXrHK8%2FRb6&noverify=0&group_code=1041747918',
+  },
 ]
 </script>
 

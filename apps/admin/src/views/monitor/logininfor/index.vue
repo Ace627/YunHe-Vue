@@ -51,7 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import { CommonConstant } from '@/common'
 import { linkDownload, TipModal } from '@/utils'
 import type { ProTableColumn } from '@/components'
 import { LogininforRequest } from '@/api/monitor/logininfor.request'

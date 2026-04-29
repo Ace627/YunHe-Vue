@@ -10,9 +10,12 @@
   },
   "scripts": {
     "dev:server": "pnpm --filter server start:dev",
-    "build:server": "pnpm --filter server build:encrypt",
+    "build:server": "pnpm --filter server build",
     "dev:admin": "pnpm --filter admin dev",
     "build:admin": "pnpm --filter admin build",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down && docker compose up -d --build",
     "svg:clean": "esno ./scripts/svg-clean.ts"
   },
   "dependencies": {

@@ -9,7 +9,6 @@
       { "include": "../public/**/*", "outDir": "./dist" },
       { "include": "../src/views/**/*", "outDir": "./dist" },
       { "include": "../package.json", "outDir": "./dist/package.json" },
-      { "include": "../pnpm-lock.yaml", "outDir": "./dist/pnpm-lock.yaml" },
       { "include": "../config/config.yaml", "outDir": "./dist" }
     ]
   },

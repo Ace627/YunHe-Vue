@@ -15,7 +15,7 @@ import { ReponseTransformInterceptor, ResponseCacheInterceptor, OperationLogInte
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ load: [configuration], ignoreEnvFile: true, isGlobal: true, cache: true }), // 加载配置文件
+    ConfigModule.forRoot({ load: [configuration], ignoreEnvFile: false, isGlobal: true, cache: true }), // 加载配置文件
     DatabaseModule, // 数据库模块
     TokenModule, // 令牌模块
     CommonModule, // 公共模块（Upload、Excel 等通用功能）
