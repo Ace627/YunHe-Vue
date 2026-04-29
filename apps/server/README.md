@@ -22,16 +22,15 @@ pnpm start:dev
 ```bash
 # 构建生产环境代码
 pnpm build
-
-# 加密构建（编译 + 代码加密）
-pnpm build:encrypt
 ```
 
 ## 部署
 
+尽量使用 Docker 进行部署，避免在本地开发环境中直接运行
+
 ```bash
-# 生产环境启动（需先执行 pnpm build:encrypt）
-pnpm start:deploy
+# 生产环境启动（需先执行 pnpm build
+pnpm start:prod
 ```
 
 ## 数据库迁移

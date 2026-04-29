@@ -40,8 +40,8 @@ importers:
         specifier: ^4.18.1
         version: 4.18.1
       md-editor-v3:
-        specifier: ^6.4.2
-        version: 6.4.2(vue@3.5.33(typescript@6.0.3))
+        specifier: ^6.5.0
+        version: 6.5.0(vue@3.5.33(typescript@6.0.3))
       nprogress:
         specifier: ^0.2.0
         version: 0.2.0
@@ -89,7 +89,7 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.99.0)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
       vite-plugin-svg-icons-ng:
-        specifier: ^1.8.0
+        specifier: ^1.8.1
         version: 1.8.1(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.99.0)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
       vue-tsc:
         specifier: ^3.2.7
@@ -5058,8 +5058,8 @@ packages:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
-  md-editor-v3@6.4.2:
-    resolution: {integrity: sha512-Jz2eYHTWpcxjakU7+2I2E9soiintAJ1NAFkXbhZYNUD1W/y52RidsjdmQRyf1YQH2pGXZyVLsHJm/mW99kA7LA==}
+  md-editor-v3@6.5.0:
+    resolution: {integrity: sha512-GhGhPebfJeOrFuybFMUZRM6GzLMhu7Sg03MWLwO6tuIKMkRN71/SeTbLYYzY95qpaMbXDMWKlTkj3UNf9Bz4dg==}
     peerDependencies:
       vue: ^3.5.3
 
@@ -12526,7 +12526,7 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  md-editor-v3@6.4.2(vue@3.5.33(typescript@6.0.3)):
+  md-editor-v3@6.5.0(vue@3.5.33(typescript@6.0.3)):
     dependencies:
       '@codemirror/autocomplete': 6.20.1
       '@codemirror/commands': 6.10.3

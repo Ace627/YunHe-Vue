@@ -4,3 +4,4 @@ packages:
 
 ignoredBuiltDependencies:
   - '@parcel/watcher'
+  - '@swc/core'
