@@ -30,7 +30,7 @@ export class WinstonModule {
       transportList.push(this.createFileTransport({ level: 'error', dirname: resolve('logs/error') }))
     }
     // exitOnError: false 日志系统异常时不终止应用
-    return NestWinstonModule.createLogger({ transports: transportList, exitOnError: false })
+    return NestWinstonModule.createLogger({ transports: transportList, exitOnError: false, level: 'verbose' })
   }
 
   /**
