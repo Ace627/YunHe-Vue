@@ -1,6 +1,6 @@
-import { InjectQueue } from '@nestjs/bull'
+import { Queue, JobsOptions } from 'bullmq'
+import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
-import { CronRepeatOptions, Queue } from 'bull'
 import { InjectRepository } from '@nestjs/typeorm'
 import { formatTime, isJsonString } from '@/utils'
 import { ModuleRef, DiscoveryService } from '@nestjs/core'
@@ -25,8 +25,10 @@ export class JobService {
     await this.initJob()
   }
 
-  test() {
-    console.log('test', formatTime())
+  // 需要此服务上下文的时候记得用箭头函数
+  test = () => {
+    console.log('test', process.pid, formatTime())
+    // this.logger.log('test' + ' ' + formatTime())
   }
 
   /* -------------------------------------------------------------------------- */
@@ -88,7 +90,7 @@ export class JobService {
     const jobList = await this.jobRepository.findBy({ id: In(jobIds) })
     if (jobList.length === 0) return '删除成功'
     // 停止 Redis 里的定时任务
-    for (const job of jobList) await this.jobQueue.removeRepeatableByKey(job.id)
+    for (const job of jobList) await this.jobQueue.removeJobScheduler(job.id)
     await this.jobRepository.delete(jobIds)
     return '删除成功'
   }
@@ -224,13 +226,14 @@ export class JobService {
   /** 初始化定时任务 */
   private async initJob() {
     // 停止所有的任务
-    const jobObjArr = await this.jobQueue.getRepeatableJobs()
-    await Promise.all(jobObjArr.map(async (item) => await this.jobQueue.removeRepeatableByKey(item.key)))
-    await this.jobQueue.empty()
+    // { key: 'df3c4304-4946-45d9-9376-c45ef333150d', name: '测试', next: 1777577239000, iterationCount: 5, pattern: '* * * * * *', offset: 0, template: { data: [Object] }}
+    const jobObjArr = await this.jobQueue.getJobSchedulers()
+    await Promise.all(jobObjArr.map(async (item) => await this.jobQueue.removeJobScheduler(item.key)))
+    await this.jobQueue.drain()
     // 查找执行错误的任务,并且执行错误策略后，清空错误情况
     const failJobArr = await this.jobQueue.getFailed()
     await this.misfirePolicy(failJobArr.map((item) => item.data))
-    await this.jobQueue.clean(0, 'failed') // 清空错误记录
+    await this.jobQueue.clean(0, 1000, BullConstant.JOB_FAILED) // 清空错误记录
     // 查找需要执行的任务，并执行
     const queryParams = new QueryJobDto()
     queryParams.status = CommonConstant.STATUS_NORMAL
@@ -259,20 +262,19 @@ export class JobService {
 
   /** 启动定时任务 */
   private async start(job: JobEntity) {
-    const repeat: CronRepeatOptions = { cron: job.cronExpression }
-    await this.jobQueue.add(job, { jobId: job.id, removeOnComplete: true, removeOnFail: false, repeat: repeat })
+    await this.jobQueue.upsertJobScheduler(job.id, { pattern: job.cronExpression }, { name: job.jobName, data: job })
   }
 
   /** 停止定时任务 */
   private async stop(jobId: string) {
-    const jobObjArr = await this.jobQueue.getRepeatableJobs()
-    const hasObj = jobObjArr.find((item) => item.id == jobId)
-    if (hasObj) await this.jobQueue.removeRepeatableByKey(hasObj.key)
+    const exists = await this.jobQueue.getJobScheduler(jobId) // 查询单个
+    if (exists) await this.jobQueue.removeJobScheduler(jobId)
   }
 
   /** 直接执行一次 */
   private async once(job: JobEntity) {
-    await this.jobQueue.add(job, { jobId: job.id, removeOnComplete: true, removeOnFail: false })
+    const options: JobsOptions = { jobId: job.id, removeOnComplete: true, removeOnFail: false }
+    await this.jobQueue.add(job.jobName, job, options)
   }
 
   /** 加载所有业务 Service（自动过滤非业务类） */

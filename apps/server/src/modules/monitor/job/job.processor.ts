@@ -1,22 +1,23 @@
-import { Job } from 'bull'
+import { Job } from 'bullmq'
 import { formatTime } from '@/utils'
 import { Logger } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 import { JobService } from './job.service'
-import { Process, Processor, OnQueueCompleted, OnQueueFailed } from '@nestjs/bull'
+import { Processor, OnWorkerEvent, WorkerHost } from '@nestjs/bullmq'
 import { BullConstant, BusinessException, CommonConstant, JobEntity, JobLogEntity } from '@/common'
 
 @Processor(BullConstant.QUEUE_NAME) // 对应你的队列名
-export class JobProcessor {
+export class JobProcessor extends WorkerHost {
   private readonly logger = new Logger(JobProcessor.name)
 
   constructor(
     private readonly moduleRef: ModuleRef,
     private readonly jobService: JobService,
-  ) {}
+  ) {
+    super()
+  }
 
-  @Process()
-  public async handle(job: Job<JobEntity>) {
+  public async process(job: Job<JobEntity>) {
     try {
       const task = job.data
       this.logger.log(`执行定时任务：${task.invokeTarget}`)
@@ -28,7 +29,7 @@ export class JobProcessor {
       if (task.concurrent === CommonConstant.STATUS_NORMAL) {
         func(...argumentsArray).catch((error: any) => {
           this.logger.error(`执行定时任务 ${job.data.invokeTarget} 失败：${error.message || '执行定时任务失败'}`)
-          job.moveToFailed(error, true)
+          job.moveToFailed(error, job.token || '', true)
         })
       } else {
         await func(...argumentsArray)
@@ -39,14 +40,14 @@ export class JobProcessor {
     }
   }
 
-  @OnQueueCompleted()
+  @OnWorkerEvent(BullConstant.JOB_COMPLETED)
   async onCompleted(job: Job<JobEntity>) {
     const entity = job.data
     entity.status = CommonConstant.STATUS_NORMAL
     await this.createJobLog(entity, '执行成功')
   }
 
-  @OnQueueFailed()
+  @OnWorkerEvent(BullConstant.JOB_FAILED)
   async onFailed(job: Job<JobEntity>, error: any) {
     const entity = job.data
     entity.status = CommonConstant.STATUS_DISABLE

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { BullModule } from '@nestjs/bull'
 import { JobService } from './job.service'
+import { BullModule } from '@nestjs/bullmq'
 import { type RedisOptions } from 'ioredis'
 import { ConfigService } from '@nestjs/config'
 import { DiscoveryModule } from '@nestjs/core'
@@ -18,8 +18,10 @@ import { BullConstant, ConfigConstant, JobEntity, JobLogEntity } from '@/common'
       name: BullConstant.QUEUE_NAME,
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const redisConfig = configService.get<RedisOptions>(ConfigConstant.REDIS_CONFIG, {})
-        return { redis: { ...redisConfig } }
+        return {
+          forceDisconnectOnShutdown: true,
+          connection: { ...configService.get<RedisOptions>(ConfigConstant.REDIS_CONFIG, {}) },
+        }
       },
     }),
   ],

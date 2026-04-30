@@ -10,7 +10,7 @@ import { WinstonModule, ConfigConstant } from '@/common'
 import { NestExpressApplication } from '@nestjs/platform-express'
 
 // 获取 CPU 核心数
-const cpus = os.cpus().length
+const cpus = process.env.NODE_ENV === 'development' ? 1 : os.cpus().length
 
 async function bootstrap() {
   // 创建 NestJS 应用实例，传入根模块 AppModule，NestFactory.create() 会初始化依赖注入系统并加载所有模块
@@ -34,11 +34,11 @@ async function bootstrap() {
   await app.listen(serverPort)
 
   // 🔥 只有被主进程标记为 LAST_WORKER 的进程才打印日志
-  if (process.env.LAST_WORKER === 'true') {
-    console.log('\n--------------------------------------------------')
-    console.log(`🚀 Local:    http://localhost:${serverPort}/${globalPrefix}`)
-    console.log('--------------------------------------------------')
-  }
+  // if (process.env.LAST_WORKER === 'true') {
+  //   console.log('\n--------------------------------------------------')
+  //   console.log(`🚀 Local:    http://localhost:${serverPort}/${globalPrefix}`)
+  //   console.log('--------------------------------------------------')
+  // }
 }
 
 // ===================== 多进程 cluster 模式 =====================
@@ -50,8 +50,7 @@ if (cluster.isPrimary) {
 
   // 启动多进程
   for (let i = 0; i < cpus; i++) {
-    const env = i === cpus - 1 ? { LAST_WORKER: 'true' } : {}
-    cluster.fork(env)
+    cluster.fork()
   }
 
   // 子进程崩溃自动重启
