@@ -2,6 +2,7 @@ name: 'yunhe-vue'
 
 volumes:
   mysql-data:
+  redis_data:
 
 networks:
   yunhe-vue:
@@ -52,7 +53,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     ports:
-      - 6612:3306
+      - ${MYSQL_PORT}:3306
     volumes:
       - mysql-data:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d
@@ -73,7 +74,9 @@ services:
       - REDISCLI_AUTH=${REDIS_PASSWORD} # 💡 注入专用的 CLI 认证变量
     command: redis-server --requirepass ${REDIS_PASSWORD} # Redis 官方镜像要求：必须通过命令行参数显式指定密码才能生效
     ports:
-      - 12758:6379
+      - ${REDIS_PORT}:6379
+    volumes:
+      - redis_data:/data
     networks:
       - yunhe-vue
     healthcheck:

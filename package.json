@@ -15,7 +15,8 @@
     "build:admin": "pnpm --filter admin build",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
-    "docker:reset": "docker compose down && docker compose up -d --build",
+    "docker:restart": "docker compose down && docker compose up -d --build",
+    "docker:reset": "docker compose down -v && docker compose up -d --build",
     "svg:clean": "esno ./scripts/svg-clean.ts"
   },
   "dependencies": {

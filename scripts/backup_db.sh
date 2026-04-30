@@ -2,10 +2,10 @@
 # 数据库备份脚本
 
 # 配置项
-COMPRESS=true              # 是否压缩备份文件 (true/false)
-BACKUP_DIR="backups"       # 备份文件存放目录
-CLEAN_OLD_BACKUPS=true     # 是否自动清理旧备份 (true/false)
-RETENTION_DAYS=7           # 保留备份天数
+COMPRESS="true"              # 是否压缩备份文件 (true/false)
+BACKUP_DIR="backups"         # 备份文件存放目录
+CLEAN_OLD_BACKUPS="true"     # 是否自动清理旧备份 (true/false)
+RETENTION_DAYS="7"           # 保留备份天数
 
 # 获取当前时间戳
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
@@ -22,11 +22,6 @@ fi
 
 # 创建备份目录
 mkdir -p ${BACKUP_DIR}
-
-# 日志函数
-log() {
-    echo "[$LOG_TIMESTAMP] $1" | tee -a "${LOG_FILE}"
-}
 
 # 根据压缩配置执行备份
 if [ "${COMPRESS}" = "true" ]; then

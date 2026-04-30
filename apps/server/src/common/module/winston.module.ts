@@ -19,10 +19,10 @@ export class WinstonModule {
   static createLogger(): LoggerService {
     // 定义日志传输目标
     const transportList: transports.StreamTransportInstance[] = []
-    if (this.isDev) {
-      const nestLikeFormat = utilities.format.nestLike('NestJS', { prettyPrint: true, colors: true, processId: true })
-      transportList.push(new transports.Console({ format: format.combine(this.timestampFormat, nestLikeFormat) }))
-    }
+    // if (this.isDev) {
+    const nestLikeFormat = utilities.format.nestLike('NestJS', { prettyPrint: true, colors: true, processId: true })
+    transportList.push(new transports.Console({ format: format.combine(this.timestampFormat, nestLikeFormat) }))
+    // }
     if (!this.isDev) {
       // 日常运维：查看 info 日志了解系统运行状态
       transportList.push(this.createFileTransport({ level: 'info', dirname: resolve('logs/info') }))
