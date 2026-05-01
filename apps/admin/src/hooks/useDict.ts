@@ -1,6 +1,6 @@
 import { ref, onMounted, toRefs } from 'vue'
-import type { DictDataEntity, DictSelectItem } from '@/types'
 import { DictRequest } from '@/api/system/dict.request'
+import type { DictDataEntity, DictSelectItem } from '@/types'
 
 // 全局字典缓存
 const dictCache: Record<string, DictSelectItem[]> = {}
@@ -38,6 +38,10 @@ export function useDict<T extends string[]>(...dictTypes: T) {
 
         dictCache[typeName] = formattedList
         dictData.value[typeName] = formattedList
+      } catch (error) {
+        console.error(`加载字典数据失败：${typeName}`, error)
+        dictData.value[typeName] = []
+        return Promise.reject(error)
       } finally {
         delete requestLock[typeName]
       }

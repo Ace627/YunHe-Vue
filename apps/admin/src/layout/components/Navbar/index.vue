@@ -7,10 +7,14 @@
 
     <div class="right h-full ml-auto flex-center">
       <!-- 全屏控件 -->
-      <Screenfull class="navbar-item" />
+      <el-tooltip :content="isFullscreen ? '退出全屏' : '全屏显示'" effect="dark" placement="bottom">
+        <Screenfull class="navbar-item" />
+      </el-tooltip>
 
       <!-- 主题切换 -->
-      <ThemeSwitch class="navbar-item" />
+      <el-tooltip :content="isDark ? '浅色主题' : '深色主题'" effect="dark" placement="bottom">
+        <ThemeSwitch class="navbar-item" />
+      </el-tooltip>
 
       <!-- 组件大小选择 -->
       <el-tooltip content="布局大小" effect="dark" placement="bottom">
@@ -35,6 +39,9 @@ import UserDropDown from './UserDropDown.vue'
 const appStore = useAppStore()
 const getterStore = useGetterStore()
 const settingStore = useSettingStore()
+const { isFullscreen } = useFullscreen()
+
+const isDark = computed(() => settingStore.theme === 'dark')
 </script>
 
 <style lang="scss" scoped>

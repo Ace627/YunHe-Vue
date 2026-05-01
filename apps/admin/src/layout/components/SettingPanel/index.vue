@@ -20,7 +20,7 @@
           <template #icon> <SvgIcon name="Refresh" /> </template>
           <span>重置配置</span>
         </el-button>
-        <el-button plain type="primary" @click="saveSetting">
+        <el-button plain type="primary" @click="saveSetting()">
           <template #icon> <SvgIcon name="Save" /> </template>
           <span>保存配置</span>
         </el-button>
