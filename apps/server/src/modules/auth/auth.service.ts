@@ -42,7 +42,7 @@ export class AuthService {
       // 4. 生成 Token
       const { accessTokenKey, accessToken } = await this.generateAccessToken(user)
       // 5. 更新登录时间
-      await this.userService.getRepository().update(userId, { loginTime: formatTime() })
+      this.userService.getRepository().update(userId, { loginTime: formatTime() })
       this.logService.createLoginLog(request, '登录成功', accessTokenKey)
       // 6. 记录日志
       return { accessToken, expiresIn: this.expiresIn }

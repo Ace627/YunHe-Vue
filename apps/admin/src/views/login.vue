@@ -49,7 +49,8 @@
 <script setup lang="ts">
 defineOptions({ name: 'Login' })
 import dayjs from 'dayjs'
-import { getTimeGreeting, TipModal } from '@/utils'
+import { TipModal } from '@/utils'
+import { getTimeGreeting } from '@yunhe-vue/utils'
 import type { LoginDto } from '@/types'
 import type { FormRules } from 'element-plus'
 import { AuthRequest } from '@/api/auth.request'

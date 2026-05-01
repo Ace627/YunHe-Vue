@@ -161,6 +161,7 @@ async function handleDelete(row?: RoleEntity) {
     }
   } catch (error) {
     console.error('RoleRequest delete error:', error)
+    return Promise.reject(error)
   }
 }
 

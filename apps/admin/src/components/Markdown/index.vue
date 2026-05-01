@@ -1,6 +1,6 @@
 <template>
   <div class="markdown-editor">
-    <MdEditor ref="editorRef" v-model="content" :toolbars-exclude="toolbarsEExclude" @save="handleSave" :placeholder />
+    <MdEditor ref="editorRef" :theme v-model="content" :toolbars-exclude="toolbarsEExclude" @save="handleSave" :placeholder />
   </div>
 </template>
 
@@ -10,6 +10,8 @@ import { MdEditor, type ToolbarNames } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { linkDownload } from '@/utils'
 
+const settingStore = useSettingStore()
+
 const content = defineModel({ type: String, required: true })
 
 const props = defineProps({
@@ -17,6 +19,7 @@ const props = defineProps({
 })
 
 // const editorRef = useTemplateRef('editorRef')
+const theme = computed(() => (settingStore.theme === 'dark' ? 'dark' : 'light'))
 
 /** 排除的工具栏 */
 const toolbarsEExclude: ToolbarNames[] = ['github']

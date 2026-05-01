@@ -266,11 +266,9 @@ watch(
 .tags-view-container {
   width: 100%;
   height: var(--el-tags-view-height);
-  background-color: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow:
-    0 1px 3px 0 rgba(0, 0, 0, 0.12),
-    0 0 3px 0 rgba(0, 0, 0, 0.04);
+  background-color: var(--el-tags-view-bg-color);
+  border-bottom: 1px solid var(--el-tags-view-border-color);
+  box-shadow: var(--el-tags-view-box-shadow);
 }
 
 .action-item {
@@ -288,7 +286,7 @@ watch(
     border-right: 1px solid var(--el-border-color-darker);
   }
   &:hover {
-    background-color: rgba(0, 21, 41, 0.08);
+    background-color: var(--el-fill-color);
   }
 }
 .action-item.is-disabled {
@@ -340,7 +338,7 @@ watch(
 }
 .svg-icon.close-icon:hover {
   color: #fff;
-  background-color: #b4bccc;
+  background-color: var(--el-color-danger);
 }
 
 /* 右键菜单 */
@@ -351,14 +349,14 @@ watch(
   font-size: 12px;
   border-radius: 4px;
   color: var(--el-text-color-primary);
-  background-color: #fff;
+  background-color: var(--el-bg-color);
   box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
   li {
     cursor: pointer;
     padding: 8px 16px;
     transition: all var(--el-transition-duration-fast);
     &:hover {
-      background-color: #eaeaea;
+      background-color: var(--el-fill-color);
     }
   }
 }

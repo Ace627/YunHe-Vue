@@ -24,4 +24,7 @@ export const defaultSettings: SystemSetting = {
 
   /** 路由转场动效 */
   transition: 'fade-transform',
+
+  /** 主题 */
+  theme: 'light',
 }

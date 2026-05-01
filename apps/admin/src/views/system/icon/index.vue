@@ -78,7 +78,7 @@ getList()
     padding: 8px 0;
     border-right: 1px solid var(--el-border-color);
     border-bottom: 1px solid var(--el-border-color);
-    background-color: #fff;
+    background-color: var(--el-bg-color);
     .label {
       font-size: 12px;
     }
