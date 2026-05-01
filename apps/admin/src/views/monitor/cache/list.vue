@@ -89,6 +89,7 @@ async function getNames() {
     nameLoading.value = false
   } catch (error) {
     nameLoading.value = false
+    return Promise.reject(error)
   }
 }
 /** 刷新缓存名称列表 */
@@ -117,6 +118,7 @@ async function getKeys() {
     keyLoading.value = false
   } catch (error) {
     keyLoading.value = false
+    return Promise.reject(error)
   }
 }
 /** 刷新缓存键名列表 */

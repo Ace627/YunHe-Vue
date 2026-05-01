@@ -159,6 +159,7 @@ async function getTypeOptions() {
     typeOptions.value = data.records
   } catch (error) {
     console.error('DictRequest findTypeList error:', error)
+    return Promise.reject(error)
   }
 }
 
@@ -180,6 +181,7 @@ async function getList() {
     total.value = data.total
   } catch (error) {
     console.error('DictRequest findDataList error:', error)
+    return Promise.reject(error)
   } finally {
     loading.value = false
   }
@@ -217,6 +219,7 @@ async function handleEdit(row: DictDataEntity) {
     visible.value = true
   } catch (error) {
     console.error('DictRequest findDataDetail error:', error)
+    return Promise.reject(error)
   }
 }
 
@@ -237,6 +240,7 @@ async function handleDelete(row?: DictDataEntity) {
     }
   } catch (error) {
     console.error('DictRequest deleteData error:', error)
+    return Promise.reject(error)
   }
 }
 
@@ -255,6 +259,7 @@ async function handleSubmit() {
     await getList()
   } catch (error) {
     console.error('DictRequest submit error:', error)
+    return Promise.reject(error)
   }
 }
 

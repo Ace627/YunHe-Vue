@@ -18,6 +18,8 @@ export interface SystemSetting {
   showTagsViewIcon: boolean
   /** 路由转场动效 */
   transition: 'fade-transform' | 'el-fade-in-linear' | 'el-fade-in' | 'el-zoom-in-center' | 'el-zoom-in-top' | 'el-zoom-in-bottom'
+  /** 主题 */
+  theme: 'light' | 'dark'
 }
 
 export function setSystemSetting(config: SystemSetting) {

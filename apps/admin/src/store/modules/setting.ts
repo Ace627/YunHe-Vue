@@ -9,10 +9,10 @@ export const useSettingStore = defineStore('setting', () => {
   const showSetting = ref<boolean>(false)
 
   /** 保存设置到本地 */
-  function saveSetting() {
-    TipModal.showLoading('正在保存到本地，请稍候...')
+  function saveSetting(config = { showTip: true }) {
+    if (config.showTip) TipModal.showLoading('正在保存到本地，请稍候...')
     setSystemSetting(toRaw(state))
-    setTimeout(() => TipModal.hideLoading(), 1500)
+    if (config.showTip) setTimeout(() => TipModal.hideLoading(), 1500)
   }
 
   /** 重置设置并刷新页面 */

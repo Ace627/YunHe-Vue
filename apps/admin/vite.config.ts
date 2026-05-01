@@ -30,6 +30,7 @@ export default defineConfig(({ mode }) => {
       ElementPlus({ useSource: true }),
       // 自动导入 vue、vue-router、Pinia 等的相关函数
       AutoImport({
+        resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
         imports: ['vue', 'pinia', 'vue-router', '@vueuse/core'],
         dts: 'types/auto-generate/auto-import.d.ts',
         dirs: ['src/store/modules', 'src/hooks'], // 配置其它需要导入的文件目录
@@ -103,7 +104,6 @@ export default defineConfig(({ mode }) => {
           entryFileNames: 'js/[name]-[hash].js',
           // 打包的文件进行拆包处理
           manualChunks(chunk) {
-            console.log('chunk: ', chunk)
             // 这个 chunk 就是所有文件的绝对路径
             // 因为 node_modules 中的依赖通常是不会改变的 所以直接单独打包出去
             // 这个 return 的值就是打包的名称
@@ -146,7 +146,10 @@ export default defineConfig(({ mode }) => {
        */
       preprocessorOptions: {
         scss: {
-          additionalData: `@use "@/styles/element-plus/el-theme-var.scss" as *;`,
+          // additionalData: `@use "@/styles/element-plus/el-theme-var.scss" as *;`,
+          additionalData: `
+            @use "@/styles/element-plus/el-theme-light.scss";
+            @use "@/styles/element-plus/el-theme-dark.scss";`,
         },
       },
     },

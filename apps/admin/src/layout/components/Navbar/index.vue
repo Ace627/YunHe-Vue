@@ -9,6 +9,9 @@
       <!-- 全屏控件 -->
       <Screenfull class="navbar-item" />
 
+      <!-- 主题切换 -->
+      <ThemeSwitch class="navbar-item" />
+
       <!-- 组件大小选择 -->
       <el-tooltip content="布局大小" effect="dark" placement="bottom">
         <SizeSelect class="navbar-item px-0!" />
@@ -26,6 +29,7 @@ import Hamburger from './Hamburger.vue'
 import Breadcrumb from './Breadcrumb.vue'
 import Screenfull from './Screenfull.vue'
 import SizeSelect from './SizeSelect.vue'
+import ThemeSwitch from './ThemeSwitch.vue'
 import UserDropDown from './UserDropDown.vue'
 
 const appStore = useAppStore()
@@ -40,7 +44,7 @@ const settingStore = useSettingStore()
   align-items: center;
   height: var(--el-navbar-height);
   background-color: var(--el-navbar-bg-color);
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  box-shadow: var(--el-navbar-box-shadow);
 }
 .navbar-item {
   cursor: pointer;
