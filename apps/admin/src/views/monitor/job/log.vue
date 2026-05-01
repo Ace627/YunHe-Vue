@@ -31,6 +31,10 @@
         <template #icon> <SvgIcon name="Delete" /> </template>
         <span>清空</span>
       </el-button>
+      <el-button :loading="exportLoading" type="warning" plain @click="handleExport" v-permissions="['monitor:job:export']">
+        <template #icon> <SvgIcon name="Download" /> </template>
+        <span>导出</span>
+      </el-button>
       <el-button type="warning" plain @click="handleClose">
         <span>关闭</span>
         <template #icon> <SvgIcon name="Close" /> </template>
@@ -57,7 +61,7 @@
 import type { JobLogEntity, JobLogQueryParams } from '@/types'
 import type { ProTableColumn } from '@/components'
 import { JobLogRequest } from '@/api/monitor/job-log.request'
-import { TipModal } from '@/utils'
+import { linkDownload, TipModal } from '@/utils'
 import JobLogDetailDialog from './detail.vue'
 
 const { sys_common_status } = useDict('sys_common_status')
@@ -67,6 +71,7 @@ const list = ref<JobLogEntity[]>([])
 const multipleSelection = ref<JobLogEntity[]>([])
 const total = ref<number>(0)
 const loading = ref<boolean>(true)
+const exportLoading = ref<boolean>(false)
 const isMultiple = computed(() => multipleSelection.value.length > 0)
 const tableRef = useTemplateRef('tableRef')
 const queryParams = ref<JobLogQueryParams>({ pageNo: 1, pageSize: 10 })
@@ -122,6 +127,21 @@ function resetQuery() {
 
 function handleView(row: JobLogEntity) {
   jobLogDetailDialogRef.value?.open(row)
+}
+
+async function handleExport() {
+  try {
+    exportLoading.value = true
+    const response = await JobLogRequest.export()
+    const filenameMatch = response.headers['content-disposition'].match(/filename\*=UTF-8''(.*)/i)
+    const filename = decodeURIComponent(filenameMatch[1])
+    linkDownload(response.data, filename)
+    exportLoading.value = false
+  } catch (error) {
+    console.log('handleExport error: ', error)
+    exportLoading.value = false
+    return Promise.reject(error)
+  }
 }
 
 async function handleDelete(row?: JobLogEntity) {

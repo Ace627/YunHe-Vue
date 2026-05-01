@@ -1,9 +1,10 @@
 import { Queue, JobsOptions } from 'bullmq'
 import { InjectQueue } from '@nestjs/bullmq'
-import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { formatTime, isJsonString } from '@/utils'
 import { ModuleRef, DiscoveryService } from '@nestjs/core'
+import { Injectable, StreamableFile } from '@nestjs/common'
+import { ExcelService } from '@/modules/common/excel/excel.service'
 import { Equal, FindOptionsWhere, In, Like, Not, Repository } from 'typeorm'
 import { BullConstant, BusinessException, CommonConstant, JobEntity, JobLogEntity } from '@/common'
 import { AnalysisInvokeTargetDto, ChangeJobStatusDto, CreateJobDto, QueryJobDto, QueryJobLogDto, RunJobDto, UpdateJobDto } from './job.dto'
@@ -15,6 +16,7 @@ export class JobService {
   constructor(
     private readonly moduleRef: ModuleRef,
     private readonly discovery: DiscoveryService,
+    private readonly excelService: ExcelService,
     @InjectQueue(BullConstant.QUEUE_NAME) private jobQueue: Queue,
     @InjectRepository(JobEntity) private readonly jobRepository: Repository<JobEntity>,
     @InjectRepository(JobLogEntity) private readonly jobLogRepository: Repository<JobLogEntity>,
@@ -217,6 +219,18 @@ export class JobService {
   public async clearJobLog() {
     await this.jobLogRepository.createQueryBuilder('jobLog').delete().execute()
     return '清空成功'
+  }
+
+  /** 导出任务调度日志 */
+  public async exportJobLog() {
+    const queryBuilder = this.jobLogRepository.createQueryBuilder('jobLog')
+    const records = await queryBuilder.getMany()
+    const fileReadableStream = await this.excelService.export(JobLogEntity, records)
+    // 构建规范的下载配置（兼容中文、所有浏览器）
+    const filename = encodeURIComponent(`任务调度日志-${formatTime(new Date(), 'YYYYMMDDHHmmss')}.xlsx`)
+    const disposition = `attachment; filename="${filename}"; filename*=UTF-8''${filename}`
+    const type = `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+    return new StreamableFile(fileReadableStream, { disposition, type })
   }
 
   /* -------------------------------------------------------------------------- */

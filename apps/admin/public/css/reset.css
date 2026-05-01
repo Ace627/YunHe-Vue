@@ -1,43 +1,12 @@
 /* 使用更直观的盒模型（box-sizing） */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   font-family: inherit;
   box-sizing: border-box;
 }
 
 /* 取消默认的内外边距 margin padding */
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-p,
-fieldset,
-legend,
-header,
-footer,
-hgroup,
-menu,
-nav,
-section,
-figcaption,
-figure,
-mark,
-form,
-time,
-td,
-th,
-label,
-hr {
+body, h1, h2, h3, h4, h5, h6, dl, dt, dd, ol, ul , li, p, fieldset, legend, header, footer, hgroup, menu, nav, section, figcaption, figure, mark, form,
+time, td, th, label, hr {
   margin: 0;
   padding: 0;
   font-style: normal;
@@ -46,34 +15,20 @@ hr {
 }
 
 /* 加粗和斜体 */
-strong,
-b {
+strong, b {
   font-weight: bold;
 }
-em,
-i {
+em, i {
   font-style: italic;
 }
 
 /* 新布局元素兼容旧版本浏览器 */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
 }
 
 /* 允许通过百分比设置应用的高度 */
-html,
-body,
-#app {
+html, body, #app {
   width: 100%;
   height: 100%;
   line-height: 1;
@@ -102,18 +57,13 @@ a:hover {
 }
 
 /* 去除图片与容器底部的留白 更合理的多媒体默认展示方式 */
-img,
-iframe,
-video,
-canvas {
+img, iframe, video, canvas {
   display: block;
   max-width: 100%;
 }
 
 /* 去除 input 标签的默认样式 */
-button,
-input,
-textarea {
+button, input, textarea {
   margin: 0;
   padding: 0;
   border: 1px solid #dcdfe6;
@@ -133,15 +83,13 @@ textarea {
 }
 
 /* 解决 chrome 浏览器默认黄色背景问题 */
-input:-webkit-autofill,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px #fff inset;
 }
 
 /* 某些元素的 corner 部分的部分样式(例:textarea 的可拖动按钮) */
 ::-webkit-resizer {
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; 
   background-position: bottom right;
 }
 
@@ -176,7 +124,7 @@ select:-webkit-autofill {
 }
 /* 某些元素的 corner 部分的部分样式(例:textarea 的可拖动按钮) */
 ::-webkit-resizer {
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; 
   background-position: bottom right;
 }
 

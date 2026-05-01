@@ -1,6 +1,6 @@
 import { JobService } from './job.service'
-import { BusinessType, OperLog, PaginationPipe, RequirePermissions } from '@/common'
 import { Body, Controller, Delete, Get, ParseArrayPipe, Post, Put, Query } from '@nestjs/common'
+import { BusinessType, OperLog, PaginationPipe, RequirePermissions, SkipTransform } from '@/common'
 import { ChangeJobStatusDto, CreateJobDto, QueryJobDto, QueryJobLogDto, RunJobDto, UpdateJobDto } from './job.dto'
 
 @Controller('monitor/job')
@@ -100,5 +100,14 @@ export class JobController {
   @OperLog({ title: '定时任务日志', businessType: BusinessType.CLEAR })
   clearJobLog() {
     return this.jobService.clearJobLog()
+  }
+
+  /** 导出任务调度日志 */
+  @SkipTransform()
+  @Post('log/export')
+  @OperLog({ title: '定时任务日志', businessType: BusinessType.EXPORT })
+  @RequirePermissions(['monitor:job:export'])
+  exportJobLog() {
+    return this.jobService.exportJobLog()
   }
 }
