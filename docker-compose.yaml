@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.server # 显式指定 Dockerfile 路径
+    deploy:
+      replicas: 2 # 启动 2 个实例，根据 CPU 核心数自行调整
     depends_on:
       mysql:
         condition: service_healthy
@@ -27,8 +29,8 @@ services:
         condition: service_healthy
     env_file:
       - ./.env
-    ports:
-      - 3000:3000
+    expose:
+      - 3000
     networks:
       - yunhe-vue
 
