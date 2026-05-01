@@ -68,6 +68,19 @@ docker compose exec -T db mysqldump -u root -p yunhe > backup.sql
 
 QQ群：[![加入QQ群](https://img.shields.io/badge/开放-1041747918-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=nipJqdnRrHgP7jjLJzbuGwyayLaqrrVA&authKey=MuJj6WXuUP4QQTvs4fMAx1Pw4skUXSLYbvXVXi2X878%2FhmgrD1dxd%2BaXrHK8%2FRb6&noverify=0&group_code=1041747918) 点击开放按钮即可入群。
 
+## 环境配置
+
+```bash
+docker -v
+# Docker version 29.4.1, build 055a478
+
+node -v
+# v22.17.0
+
+pnpm -v
+# 10.33.2
+```
+
 ## 开源协议
 
 本项目所有代码均遵循根目录 [LICENSE](./LICENSE) 协议。
