@@ -28,9 +28,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const requestId = request[CommonConstant.REQUEST_ID_KEY] // 从请求上下文获取请求 ID
     const { code, status, message } = this.analyzeException(exception)
-    const { method, query, body, path } = request
-    const rawContent = { message, requestId, method, path, query, body }
+    const { query, body } = request
+    const rawContent = { query, body, message }
     const printContent = this.isDev ? JSON.stringify(rawContent) : rawContent
+    this.logger.error(`${request.method} ${request.path} ${requestId}`)
     this.logger.error(printContent)
 
     response.status(status)

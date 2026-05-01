@@ -49,6 +49,6 @@ import { ReponseTransformInterceptor, ResponseCacheInterceptor, OperationLogInte
 export class AppModule implements NestModule {
   async configure(consumer: MiddlewareConsumer): Promise<void> {
     // 所有接口都应用用户上下文中间件，用于从请求中获取登录用户信息并存入全局上下文
-    consumer.apply(BeforeEachMiddleware).forRoutes('*path')
+    consumer.apply(BeforeEachMiddleware).forRoutes('')
   }
 }
