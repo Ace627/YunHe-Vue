@@ -5,7 +5,7 @@
 <h1 align="center">YunHe v1.0.0</h1>
 
 <h4 align="center">基于 NestJS 开发的轻量级 TypeScript 快速快速开发框架</h4>
-<h4 align="center">云在青天，禾在土；管理在心，事在术</h4>
+
 
 <p align="center">
 	<a href="https://gitee.com/decade9527/YunHe-Vue/stargazers">
@@ -21,8 +21,7 @@
 
 ## 平台简介
 
-不争云端之名，只守禾下之实；不炫繁复之术，但求至简之理。
-YunHe-Vue 是一套轻量化全栈快速开发平台，专为前端进阶全栈开发者打造，完全开源免费供个人与企业使用。
+YunHe-Vue 是一套轻量化全栈快速开发平台，专为前端进阶全栈开发者打造，完全开源免费供个人与企业使用。云在青天，禾在土；管理在心，事在术。不争云端之名，只守禾下之实；不炫繁复之术，但求至简之理。
 
 - 前端采用 Vue3、Element Plus、Vite 与 TypeScript
 - 后端采用 NestJS、TypeORM、Redis 与 Jwt 构建
