@@ -54,7 +54,7 @@
       </template>
       <template #action="{ row }">
         <el-link type="primary" @click="handleEdit(row)" v-permissions="['system:dict:update']">修改</el-link>
-        <el-link type="danger" @click="handleDelete(row)" v-permissions="['system:dict:delete']">删除</el-link>
+        <el-link type="primary" @click="handleDelete(row)" v-permissions="['system:dict:delete']">删除</el-link>
       </template>
     </ProTable>
 

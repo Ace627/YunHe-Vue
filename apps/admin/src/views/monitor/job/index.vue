@@ -52,7 +52,7 @@
       <template #action="{ row }">
         <el-link type="primary" @click="handleEdit(row)" v-permissions="['monitor:job:update']">修改</el-link>
         <el-link type="primary" @click="handleRun(row)" v-permissions="['monitor:job:update']">执行一次</el-link>
-        <el-link type="danger" @click="handleDelete(row)" v-permissions="['monitor:job:delete']">删除</el-link>
+        <el-link type="primary" @click="handleDelete(row)" v-permissions="['monitor:job:delete']">删除</el-link>
         <el-link type="primary" @click="toJobLog(row)" v-permissions="['monitor:job:query']">日志</el-link>
       </template>
     </ProTable>

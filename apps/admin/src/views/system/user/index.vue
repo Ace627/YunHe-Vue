@@ -42,7 +42,7 @@
       </template>
       <template #action="{ row }">
         <el-link type="primary" @click="handleEdit(row)" v-permissions="['system:user:update']">修改</el-link>
-        <el-link type="danger" @click="handleDelete(row)" v-permissions="['system:user:delete']">删除</el-link>
+        <el-link type="primary" @click="handleDelete(row)" v-permissions="['system:user:delete']">删除</el-link>
       </template>
     </ProTable>
 

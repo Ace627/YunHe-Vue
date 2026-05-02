@@ -39,8 +39,8 @@
       </template>
       <template #action="{ row }">
         <el-link type="primary" @click="handleEdit(row)" v-permissions="['system:role:update']">修改</el-link>
-        <el-link type="danger" @click="handleDelete(row)" v-permissions="['system:role:delete']">删除</el-link>
-        <el-link type="success" @click="handleAuth(row)" v-permissions="['system:role:update']">授权</el-link>
+        <el-link type="primary" @click="handleDelete(row)" v-permissions="['system:role:delete']">删除</el-link>
+        <el-link type="primary" @click="handleAuth(row)" v-permissions="['system:role:update']">授权</el-link>
       </template>
     </ProTable>
 
