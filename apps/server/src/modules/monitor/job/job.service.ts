@@ -239,15 +239,20 @@ export class JobService {
 
   /** 初始化定时任务 */
   private async initJob() {
-    // 停止所有的任务
+    // 停止所有的任务调度器
     // { key: 'df3c4304-4946-45d9-9376-c45ef333150d', name: '测试', next: 1777577239000, iterationCount: 5, pattern: '* * * * * *', offset: 0, template: { data: [Object] }}
     const jobObjArr = await this.jobQueue.getJobSchedulers()
     await Promise.all(jobObjArr.map(async (item) => await this.jobQueue.removeJobScheduler(item.key)))
+    // 清理等待中的任务
     await this.jobQueue.drain()
+    // 清理活跃中的任务
+    const activeJobs = await this.jobQueue.getActive()
+    for (const job of activeJobs) await job.remove()
     // 查找执行错误的任务,并且执行错误策略后，清空错误情况
     const failJobArr = await this.jobQueue.getFailed()
     await this.misfirePolicy(failJobArr.map((item) => item.data))
     await this.jobQueue.clean(0, 1000, BullConstant.JOB_FAILED) // 清空错误记录
+
     // 查找需要执行的任务，并执行
     const queryParams = new QueryJobDto()
     queryParams.status = CommonConstant.STATUS_NORMAL
@@ -276,7 +281,11 @@ export class JobService {
 
   /** 启动定时任务 */
   private async start(job: JobEntity) {
-    await this.jobQueue.upsertJobScheduler(job.id, { pattern: job.cronExpression }, { name: job.jobName, data: job })
+    // 确保先移除旧的调度器，防止重复创建
+    const existing = await this.jobQueue.getJobScheduler(job.id)
+    if (existing) await this.jobQueue.removeJobScheduler(job.id)
+    // 添加自动清理选项，防止任务堆积
+    await this.jobQueue.upsertJobScheduler(job.id, { pattern: job.cronExpression }, { name: job.jobName, data: job, opts: { removeOnComplete: true, removeOnFail: true } })
   }
 
   /** 停止定时任务 */
@@ -287,6 +296,10 @@ export class JobService {
 
   /** 直接执行一次 */
   private async once(job: JobEntity) {
+    // 先检查是否存在相同 jobId 的任务，避免重复添加
+    const existing = await this.jobQueue.getJob(job.id)
+    // 如果存在，移除旧任务再添加新任务
+    if (existing) await this.jobQueue.remove(job.id)
     const options: JobsOptions = { jobId: job.id, removeOnComplete: true, removeOnFail: false }
     await this.jobQueue.add(job.jobName, job, options)
   }
