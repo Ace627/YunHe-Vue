@@ -22,12 +22,14 @@ const props = defineProps({
   options: { type: Object as PropType<EChartsOption>, default: () => ({}) },
 })
 
+const settingStore = useSettingStore()
 /** 获取图表 DOM 元素的引用 */
 const chartDOM = useTemplateRef('proChartRef')
 /** 存储初始化后的 ECharts 实例，null 表示未初始化/已销毁 */
 let chartInstance: EChartsType | null = null
 /** 尺寸监听实例，用于实现图表自适应，null 表示未创建/已断开 */
 let chartResizeObserver: ResizeObserver | null = null
+const isDark = computed(() => settingStore.theme === 'dark')
 
 /**
  * 初始化 ECharts 实例
@@ -36,8 +38,12 @@ let chartResizeObserver: ResizeObserver | null = null
 function init() {
   // 校验：容器 DOM 不存在则终止初始化
   if (!chartDOM.value) return
+  if (chartInstance) {
+    chartInstance.dispose()
+    chartInstance = null
+  }
   // 初始化 ECharts 实例（绑定到指定 DOM 容器）
-  chartInstance = echarts.init(chartDOM.value) as unknown as EChartsType
+  chartInstance = echarts.init(chartDOM.value, isDark.value ? 'dark' : 'light') as unknown as EChartsType
   // 若传入的 options 非空，则立即更新图表配置（渲染初始图表）
   if (!isEmpty(props.options)) updateChart()
 }
@@ -48,10 +54,8 @@ function init() {
  * @remarks 合并模式：新配置会与旧配置合并，而非完全替换，适合局部更新
  */
 function updateChart() {
-  // 校验：ECharts 实例未初始化则终止
   if (!chartInstance) return
-  // 调用 ECharts 原生方法更新配置，第二个参数为 false 表示合并配置（默认）
-  chartInstance.setOption(props.options, false)
+  chartInstance.setOption({ backgroundColor: 'transparent', ...props.options }, false)
 }
 
 /**
@@ -97,7 +101,15 @@ function initResizeObserver() {
 watch(
   () => props.options,
   () => updateChart(),
-  { deep: true, immediate: true },
+  { deep: true },
+)
+
+// 切换主题时 → 自动重新初始化图表
+watch(
+  () => isDark.value,
+  () => {
+    init()
+  },
 )
 
 onMounted(async () => {
