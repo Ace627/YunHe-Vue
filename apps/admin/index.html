@@ -10,7 +10,20 @@
   </head>
   <body>
     <!-- VueJS 挂载的 DOM 容器 -->
-    <div id="app"></div>
+    <div id="app">
+      <!-- 临时样式，Vue 挂载后自动移除，避免污染 -->
+      <link rel="stylesheet" href="/css/app-loading.css" />
+      <!-- 白屏阶段会执行的 CSS 加载动画 -->
+      <div class="app-loading">
+        <div class="app-loading-wrap">
+          <img src="/src/assets/images/logo.png" class="app-loading-logo" alt="Logo" />
+          <div class="app-loading-dots">
+            <span class="dot"><i></i><i></i><i></i><i></i></span>
+          </div>
+          <div class="app-loading-title">%VITE_APP_TITLE%</div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
