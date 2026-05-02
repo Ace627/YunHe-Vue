@@ -21,7 +21,7 @@
 
     <ProTable ref="tableRef" v-loading="loading" :data="list" :columns="columns">
       <template #action="{ row }">
-        <el-link type="danger" @click="handleForceLogout(row)" v-permissions="['monitor:online:forceLogout']">强退</el-link>
+        <el-link type="primary" @click="handleForceLogout(row)" v-permissions="['monitor:online:forceLogout']">强退</el-link>
       </template>
     </ProTable>
 

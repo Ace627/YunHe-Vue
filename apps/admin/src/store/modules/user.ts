@@ -1,5 +1,5 @@
-import type { LoginDto } from '@/types'
 import { AuthRequest } from '@/api/auth.request'
+import type { LoginDto, UserEntity } from '@/types'
 import { removeAccessToken, setAccessToken } from '@/utils'
 import defaultAvatar from '@/assets/images/default/default-avatar.gif'
 
@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', () => {
 
   const roles = ref<string[]>([])
   const permissions = ref<string[]>([])
-  const user = ref({} as any)
+  const user = ref({} as UserEntity)
   /** 用户头像 */
   const avatar = ref<string>(defaultAvatar)
 

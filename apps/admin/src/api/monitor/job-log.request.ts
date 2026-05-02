@@ -16,4 +16,9 @@ export abstract class JobLogRequest {
   static clear(): Promise<string> {
     return request.delete(`/monitor/job/log/clear`)
   }
+
+  /** 导出任务调度日志 */
+  static export() {
+    return request.post('/monitor/job/log/export', {}, { responseType: 'blob' })
+  }
 }

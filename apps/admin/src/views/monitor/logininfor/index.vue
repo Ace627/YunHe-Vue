@@ -42,7 +42,7 @@
         <DictTag :options="sys_common_status" :value="row.status" />
       </template>
       <template #action="{ row }">
-        <el-link type="danger" @click="handleDelete(row)">删除</el-link>
+        <el-link type="primary" @click="handleDelete(row)">删除</el-link>
       </template>
     </ProTable>
 

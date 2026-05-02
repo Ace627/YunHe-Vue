@@ -49,8 +49,8 @@
       </template>
       <template #action="{ row }">
         <el-link type="primary" @click="handleCreate(row)" v-permissions="['system:menu:create']">新增</el-link>
-        <el-link type="warning" @click="handleUpdate(row)" v-permissions="['system:menu:update']">修改</el-link>
-        <el-link type="danger" @click="handleDelete(row)" v-permissions="['system:menu:delete']">删除</el-link>
+        <el-link type="primary" @click="handleUpdate(row)" v-permissions="['system:menu:update']">修改</el-link>
+        <el-link type="primary" @click="handleDelete(row)" v-permissions="['system:menu:delete']">删除</el-link>
       </template>
     </ProTable>
 

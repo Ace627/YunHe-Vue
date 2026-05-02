@@ -11,7 +11,7 @@ export const STATIC_ROUTE_LIST: RouteRecordRaw[] = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect.vue'),
+        component: () => import('@/views/core/redirect.vue'),
       },
     ],
   },

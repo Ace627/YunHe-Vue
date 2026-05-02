@@ -52,7 +52,7 @@
       </template>
       <template #action="{ row }">
         <el-link type="primary" @click="handleView(row)">详细</el-link>
-        <el-link type="danger" @click="handleDelete(row)">删除</el-link>
+        <el-link type="primary" @click="handleDelete(row)">删除</el-link>
       </template>
     </ProTable>
 
