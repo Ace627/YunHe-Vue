@@ -8,7 +8,7 @@
       <header class="monitor-dashboard__header">
         <div class="monitor-dashboard__header-left" @click="toHome">
           <img src="/img/logo.png" alt="logo" class="monitor-dashboard__logo" />
-          <span class="monitor-dashboard__sys-name">云禾管理系统</span>
+          <span class="monitor-dashboard__sys-name">{{ appTitle }}</span>
         </div>
         <div class="monitor-dashboard__header-center">
           <h1 class="monitor-dashboard__title">实时监控中心</h1>
@@ -183,6 +183,7 @@ const mapReady = ref(false)
 
 /** 实时计算当前页面的帧率（FPS） */
 const fps = useFps()
+const appTitle = import.meta.env.VITE_APP_TITLE
 
 const TABLE_ROW_COUNT = 4 // 实际显示是 4 +1 行
 
