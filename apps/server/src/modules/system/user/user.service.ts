@@ -74,7 +74,7 @@ export class UserService {
     // 1. 两次密码必须一致
     if (newPassword !== repeatPassword) throw new BusinessException('两次输入的新密码不一致')
     // 2. 查询用户（仅查询id和密码）
-    const user = await this.userRepository.findOne({ where: { id: Equal(userId) }, select: ['id', 'password'] })
+    const user = await this.userRepository.findOne({ where: { id: Equal(userId) }, select: { id: true, password: true } })
     if (!user) throw new BusinessException('用户不存在')
     // 3. 校验旧密码是否正确
     const isOldPwdValid = await verifyPassword(oldPassword, user.password)
