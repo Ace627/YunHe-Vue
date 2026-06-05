@@ -1,10 +1,11 @@
 import { PaginationDto } from '@/common'
 import { Exclude } from 'class-transformer'
 import { PartialType, PickType } from '@nestjs/mapped-types'
-import { IsArray, IsNotEmpty, IsOptional } from 'class-validator'
+import { IsArray, IsNotEmpty, IsOptional, Matches } from 'class-validator'
 
 export class CreateUserDto {
   @IsNotEmpty({ message: '参数 $property  不能为空' })
+  @Matches(/^[a-zA-Z][a-zA-Z0-9]*$/, { message: '用户账号须以字母开头、仅含字母与数字' })
   username: string
 
   @IsNotEmpty({ message: '参数 $property  不能为空' })

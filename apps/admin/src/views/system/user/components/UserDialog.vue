@@ -44,7 +44,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="24">
+        <el-col :span="12" :xs="24">
           <el-form-item label="用户角色" prop="roleIds">
             <el-select v-model="form.roleIds" placeholder="请选择用户角色" multiple clearable>
               <el-option v-for="item in roleList" :key="item.id" :label="item.roleName" :value="item.id" />
@@ -94,8 +94,12 @@ const tipMessage = computed(() => (isUpdate.value ? '编辑成功' : '新增成�
 const roleList = ref<Array<RoleEntity>>([])
 /** 用户新增表单校验规则 */
 const rules: FormRules<UserEntity> = {
-  username: [{ required: true, message: '用户账号不能为空', trigger: 'blur' }],
+  username: [
+    { required: true, message: '用户账号不能为空', trigger: 'blur' },
+    { pattern: /^[a-zA-Z][a-zA-Z0-9]*$/, message: '用户账号需字母开头，可有数字', trigger: 'blur' },
+  ],
   nickname: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],
+  roleIds: [{ required: true, message: '用户角色不能为空', trigger: 'change' }],
   phone: [{ required: true, message: '手机号码不能为空', trigger: 'blur' }],
   email: [
     { required: true, message: '用户邮箱不能为空', trigger: 'blur' },
