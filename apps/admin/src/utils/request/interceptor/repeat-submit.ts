@@ -1,4 +1,4 @@
-import { isJsonString } from '@yunhe-vue/utils'
+import { isJsonString } from '@yunhe/utils'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 /** 正在请求中的 key 集合 */

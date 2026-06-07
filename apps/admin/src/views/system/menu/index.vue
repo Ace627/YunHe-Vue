@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { isExternal } from '@yunhe-vue/utils'
+import { isExternal } from '@yunhe/utils'
 import type { ProTableColumn } from '@/types'
 import { listToTree, TipModal } from '@/utils'
 import MenuDialog from './components/MenuDialog.vue'

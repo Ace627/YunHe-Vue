@@ -173,7 +173,7 @@
 import type { EChartsOption } from 'echarts'
 import { toHome } from '@/router/router.helper'
 import { registerChinaMap } from './register-china-map'
-import { formatTime, getDaysDiff, getWeekDay } from '@yunhe-vue/utils'
+import { formatTime, getDaysDiff, getWeekDay } from '@yunhe/utils'
 import { browserData, osData, chinaMapScatterData, chinaFlyLines, systemResourceData, redisCommandData, onlineUserData, loginRecordData } from './mock-data'
 import { CacheConstant } from '@/common'
 import { getSystemSetting } from '@/utils'

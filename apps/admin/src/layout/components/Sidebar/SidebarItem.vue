@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 defineOptions({ name: 'SidebarItem' })
-import { isExternal } from '@yunhe-vue/utils'
+import { isExternal } from '@yunhe/utils'
 import { router } from '@/router'
 import type { RouteRecordRaw } from 'vue-router'
 

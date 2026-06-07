@@ -1,6 +1,6 @@
 import { merge } from 'lodash-es'
 import { defaultSettings } from '@/settings'
-import { tint, shade } from '@yunhe-vue/utils'
+import { tint, shade } from '@yunhe/utils'
 import { getSystemSetting, removeSystemSetting, setSystemSetting, TipModal, type SystemSetting } from '@/utils'
 
 export const useSettingStore = defineStore('setting', () => {

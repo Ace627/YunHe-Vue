@@ -97,7 +97,7 @@ import type { GlobalComponents } from 'vue'
 import { MenuRequest } from '@/api/system/menu.request'
 import type { FormRules } from 'element-plus'
 import { TipModal } from '@/utils'
-import { isExternal, isStringNumber } from '@yunhe-vue/utils'
+import { isExternal, isStringNumber } from '@yunhe/utils'
 import type { MenuEntity, MenuTreeEntity } from '@/types'
 import { CommonConstant } from '@/common'
 

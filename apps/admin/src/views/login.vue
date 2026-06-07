@@ -51,7 +51,7 @@ defineOptions({ name: 'Login' })
 import type { LoginDto } from '@/types'
 import type { FormRules } from 'element-plus'
 import { AuthRequest } from '@/api/auth.request'
-import { getTimeGreeting, formatTime } from '@yunhe-vue/utils'
+import { getTimeGreeting, formatTime } from '@yunhe/utils'
 import defaultCaptcha from '@/assets/images/default/default-captcha.png'
 import { getLoginParams, removeLoginParams, setLoginParams, TipModal } from '@/utils'
 
