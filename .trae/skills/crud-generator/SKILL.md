@@ -234,7 +234,19 @@ export class QueryNoticeDto extends PaginationDto {
 - 必填用 `@IsNotEmpty`，可选用 `@IsOptional`，字符串用 `@IsString`
 - `QueryDto extends PaginationDto`（来自 `@/common`，不可手写 pageNo/pageSize）
 - `UpdateDto extends PartialType(CreateDto)` + 单独写 `id` + `@Exclude()` 掉 `createBy`
-- **树形模式**: 在 CreateDto 和 UpdateDto 中各加一个 `@IsOptional()` 的 `parentId: string`
+- **树形模式**:
+  - CreateDto 和 UpdateDto 中各加一个 `@IsOptional()` 的 `parentId: string`
+  - QueryDto 不继承 `PaginationDto`（树表不分页），仅含查询字段:
+
+```typescript
+export class QueryNoticeDto {
+  @IsOptional()
+  noticeName: string
+
+  @IsOptional()
+  status: string
+}
+```
 
 ### 1-3. Service
 
@@ -315,7 +327,10 @@ export class NoticeService {
 - `delete` 入参 `ids: string[]`，先 `findBy({ id: In(ids) })` 检查存在性
 - `findList` 必须用 `createQueryBuilder` + `getManyAndCount`（一次查询拿 data + total），不用 `findAndCount`
 - 字段类型为 text 的不要做 Equal 查询，只在 `QueryDto` 中不给它加查询条件
-- **树形模式**: `findList` 返回 `listToTree(records)`（from `@/utils`）
+- **树形模式**:
+  - `delete` 入参 `id: string`（单条），先 `findOneBy({ id: Equal(id) })` 检查存在性
+  - `findList` 不使用分页，直接用 `queryBuilder.orderBy('notice.orderNum', 'ASC').getMany()` 返回平铺数组，再在 Service 层调用 `listToTree(records)` 返回树结构（from `@/utils`）
+  - 额外提供 `findParentList()` 方法：查询全部未禁用记录，返回树结构（含根节点 `id='0'` 包装），供 `el-tree-select` 使用
 
 ### 1-4. Controller
 
@@ -323,8 +338,8 @@ export class NoticeService {
 
 ```typescript
 import { NoticeService } from './notice.service'
-import { OperLog, BusinessType, PaginationPipe, RequirePermissions, RepeatSubmit } from '@/common'
 import { CreateNoticeDto, QueryNoticeDto, UpdateNoticeDto } from './notice.dto'
+import { OperLog, BusinessType, PaginationPipe, RequirePermissions, RepeatSubmit } from '@/common'
 import { Controller, Get, Post, Put, Delete, Body, ParseArrayPipe, Query } from '@nestjs/common'
 
 @Controller('system/notice')
@@ -377,6 +392,10 @@ export class NoticeController {
 - `@OperLog` 的 `title` 为模块中文名，`businessType` 与 HTTP 动词对应: INSERT / UPDATE / DELETE
 - 权限码格式: `<area>:<module>:query / create / update / delete`
 - 不写 `export/import/clear` 等功能
+- **树形模式差异**:
+  - `list` 不使用 `PaginationPipe`，Service 层已返回树结构，Controller 直接透传
+  - `delete` 用 `@Query('id') id: string` 而非 `@Query('ids', new ParseArrayPipe()) ids: string[]`，且不加 `@RepeatSubmit`
+  - 额外增加 `list/parent` 接口: `Get('list/parent')` + `@RequirePermissions`，调用 `findParentList()`
 
 ### 1-5. Module + 注册
 
@@ -384,10 +403,10 @@ export class NoticeController {
 
 ```typescript
 import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
 import { NoticeEntity } from '@/common'
-import { NoticeController } from './notice.controller'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { NoticeService } from './notice.service'
+import { NoticeController } from './notice.controller'
 
 @Module({
   imports: [TypeOrmModule.forFeature([NoticeEntity])],
@@ -442,6 +461,29 @@ export interface NoticeEntity extends BaseEntity {
   export * from './api/system/notice'
 ```
 
+**树形模式差异:**
+
+- QueryParams 不继承 `PaginationParams`（树表不分页）
+- 额外生成 TreeEntity 类型（用于 el-tree-select 和列表渲染）:
+
+```typescript
+export interface NoticeQueryParams {
+  noticeName?: string
+  status?: string
+}
+
+export interface NoticeEntity extends BaseEntity {
+  id: string
+  parentId: string
+  noticeName: string
+  status: string
+}
+
+export interface NoticeTreeEntity extends NoticeEntity {
+  children: NoticeTreeEntity[]
+}
+```
+
 ### 2-2. API Request
 
 文件路径: `apps/admin/src/api/<area>/<module>.request.ts`
@@ -482,7 +524,23 @@ export abstract class NoticeRequest {
 - `DELETE` (delete) → 用 `{ params }` 传 Query 参数（ids）
 - URL 去掉 `/api` 前缀（request 实例的 baseURL 已配），用 Controller 方法上的小写路径
 
-### 2-3. index.vue
+**树形模式差异:**
+
+- `findDetail` 改名为 `findOneById`（与 Service 命名一致）
+- `findList` 返回 `Array<NoticeTreeEntity>`（非分页响应），参数去除 `pageNo/pageSize`
+- `delete` 用 `{ id: string }` 而非 `{ ids: string }`（树形逐条删除）
+- 额外增加 `findParentList` 方法:
+
+```typescript
+  static findOneById(params: { id: string }): Promise<NoticeEntity> {
+    return request.get('/system/notice/detail', { params })
+  }
+  static findParentList(): Promise<NoticeTreeEntity[]> {
+    return request.get('/system/notice/list/parent')
+  }
+```
+
+### 2-3. 标准模式 index.vue
 
 文件路径: `apps/admin/src/views/<area>/<module>/index.vue`
 
@@ -703,7 +761,250 @@ getList()
 - 不写任何注释
 - 不要用 UnoCSS 原子类，样式写 `<style lang="scss" scoped>` 内
 
+### 2-3-b. 树形模式 index.vue
+
+文件路径: `apps/admin/src/views/<area>/<module>/index.vue`
+
+树形模式与标准模式差异较大，需使用独立的模板。
+
+**template 部分:**
+
+```vue
+<template>
+  <div class="app-content">
+    <ProSearch :items v-model="queryParams" @query="handleQuery" @reset="resetQuery" v-permissions="['system:notice:query']" />
+
+    <div class="mb-16px">
+      <el-button plain type="primary" @click="handleCreate()" v-permissions="['system:notice:create']">
+        <template #icon> <SvgIcon name="Plus" /> </template>
+        <span>新增</span>
+      </el-button>
+      <el-button plain type="info" @click="toggleExpandAll">
+        <template #icon> <SvgIcon name="Sort" /> </template>
+        <span>{{ isExpandAll ? '折叠' : '展开' }}</span>
+      </el-button>
+    </div>
+
+    <ProTable :loading :columns :data="list" row-key="id" :default-expand-all="isExpandAll" v-if="refreshTable">
+      <template #status="{ row }">
+        <DictTag :options="sys_normal_disable" :value="row.status" />
+      </template>
+      <template #action="{ row }">
+        <el-link type="primary" @click="handleCreate(row)" v-permissions="['system:notice:create']">新增</el-link>
+        <el-link type="primary" @click="handleUpdate(row)" v-permissions="['system:notice:update']">修改</el-link>
+        <el-link type="primary" @click="handleDelete(row)" v-permissions="['system:notice:delete']">删除</el-link>
+      </template>
+    </ProTable>
+
+    <NoticeDialog ref="noticeDialogRef" @getList="getList" />
+  </div>
+</template>
+```
+
+**script setup 部分:**
+
+```vue
+<script setup lang="ts">
+import { TipModal } from '@/utils'
+import type { ProTableColumn } from '@/types'
+import NoticeDialog from './components/NoticeDialog.vue'
+import { NoticeRequest } from '@/api/system/notice.request'
+import type { NoticeEntity, NoticeQueryParams, NoticeTreeEntity, ProSearchItem } from '@/types'
+
+const noticeDialogRef = ref<InstanceType<typeof NoticeDialog>>()
+const { sys_normal_disable } = useDict('sys_normal_disable')
+
+const loading = ref<boolean>(false)
+const isExpandAll = ref<boolean>(false)
+const refreshTable = ref<boolean>(true)
+const queryParams = ref<NoticeQueryParams>({})
+const list = ref<NoticeTreeEntity[]>([])
+
+const items: ProSearchItem[] = [
+  { type: 'input', prop: 'noticeName', label: '分类名称' },
+  { type: 'select', prop: 'status', label: '状态', options: sys_normal_disable },
+]
+
+const columns: ProTableColumn<NoticeEntity>[] = [
+  { align: 'left', label: '分类名称', prop: 'noticeName', width: 200 },
+  { align: 'center', label: '显示顺序', prop: 'orderNum', width: 100 },
+  { align: 'center', label: '状态', slot: 'status' },
+  { align: 'center', label: '创建时间', prop: 'createTime', width: 170 },
+  { align: 'center', label: '操作', slot: 'action', width: 150, fixed: 'right' },
+]
+
+async function getList() {
+  try {
+    loading.value = true
+    const data = await NoticeRequest.findList(queryParams.value)
+    list.value = data
+    loading.value = false
+  } catch (error) {
+    console.log('getList error: ', error)
+    loading.value = false
+    return Promise.reject(error)
+  }
+}
+
+function handleQuery() {
+  getList()
+}
+function resetQuery() {
+  queryParams.value = {}
+  handleQuery()
+}
+
+function handleCreate(record?: NoticeEntity) {
+  noticeDialogRef.value?.open('create', record)
+}
+
+function handleUpdate(record: NoticeEntity) {
+  noticeDialogRef.value?.open('update', record)
+}
+
+async function handleDelete(record: NoticeEntity) {
+  const { cancel } = await TipModal.confirm(`确定要删除《${record.noticeName}》吗？`)
+  if (cancel) return TipModal.msg('操作取消')
+  await NoticeRequest.delete({ id: record.id })
+  TipModal.msgSuccess('删除成功')
+  getList()
+}
+
+function toggleExpandAll() {
+  refreshTable.value = false
+  isExpandAll.value = !isExpandAll.value
+  nextTick(() => (refreshTable.value = true))
+}
+
+onMounted(() => {
+  getList()
+})
+</script>
+
+<style lang="scss" scoped></style>
+```
+
+**规则:**
+
+- 无 `ProPagination`（树表不翻页）
+- 无 `type: 'selection'` 列和批量删除按钮（树形逐条操作）
+- ProTable 必须设置 `row-key="id"` 和 `:default-expand-all="isExpandAll"`
+- 展开/折叠通过 `v-if="refreshTable"` + `toggleExpandAll` 销毁重建实现
+- `list` 类型为 `NoticeTreeEntity[]`（含 children），数据由后端 Service 层 `listToTree` 处理后直接使用，前端无需再次转换
+- 查询参数不包含 `pageNo/pageSize`
+- `handleCreate(row?)` 接受可选父节点参数，用于指定新增节点的上级
+- `handleDelete` 为单条删除，无需 `try/catch` 和分页回退逻辑
+- 对话框作为独立组件（`NoticeDialog`），通过 `ref` + `defineExpose({ open })` 调用
+- 不写任何注释
+
+### 2-3-c. 树形模式对话框组件
+
+文件路径: `apps/admin/src/views/<area>/<module>/components/<Module>Dialog.vue`
+
+```vue
+<template>
+  <el-dialog :title="dialogTitle" v-model="visible" :before-close="close" :width="dialogWidth">
+    <el-form ref="formRef" :model="form" :rules label-width="80px">
+      <el-form-item label="上级分类" prop="parentId">
+        <el-tree-select v-model="form.parentId" check-strictly node-key="id" :data="parentList" :props="{ label: 'noticeName' }" placeholder="请选择上级分类" clearable />
+      </el-form-item>
+      <el-form-item label="分类名称" prop="noticeName">
+        <el-input v-model.trim="form.noticeName" placeholder="请输入分类名称" />
+      </el-form-item>
+      <el-form-item label="显示顺序" prop="orderNum">
+        <el-input-number v-model.number="form.orderNum" controls-position="right" />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="form.status" :options="sys_normal_disable" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="close">取消</el-button>
+      <el-button type="primary" @click="submit">确定</el-button>
+    </template>
+  </el-dialog>
+</template>
+
+<script setup lang="ts">
+defineOptions({ name: 'NoticeDialog' })
+import { TipModal } from '@/utils'
+import { CommonConstant } from '@/common'
+import type { FormRules } from 'element-plus'
+import { NoticeRequest } from '@/api/system/notice.request'
+import type { NoticeEntity, NoticeTreeEntity } from '@/types'
+
+const emits = defineEmits<{
+  getList: []
+}>()
+
+const appStore = useAppStore()
+const { sys_normal_disable } = useDict('sys_normal_disable')
+
+const formRef = useTemplateRef('formRef')
+const parentList = ref<NoticeTreeEntity[]>([])
+const form = ref({} as NoticeEntity)
+const loading = ref<boolean>(false)
+const visible = ref<boolean>(false)
+const dialogWidth = computed(() => (appStore.isDesktop ? '640px' : 'calc(100% - 32px)'))
+const dialogTitle = computed(() => (isUpdate.value ? '修改分类' : '新增分类'))
+const isUpdate = ref<boolean>(false)
+
+const rules: FormRules<NoticeEntity> = {
+  noticeName: [{ required: true, message: '分类名称不能为空', trigger: 'blur' }],
+  orderNum: [{ required: true, message: '显示顺序不能为空', trigger: 'blur' }],
+}
+
+async function open(mode: 'create' | 'update', record?: NoticeEntity) {
+  visible.value = true
+  isUpdate.value = mode === 'update'
+  if (isUpdate.value && record) {
+    form.value = await NoticeRequest.findOneById({ id: record.id })
+  } else {
+    form.value.parentId = record ? record.id : '0'
+    form.value.status = CommonConstant.STATUS_NORMAL
+  }
+  parentList.value = await NoticeRequest.findParentList()
+}
+
+function close() {
+  if (loading.value) return TipModal.msg('数据处理中，请勿操作')
+  formRef.value?.resetFields()
+  visible.value = false
+}
+
+async function submit() {
+  try {
+    await formRef.value?.validate()
+    loading.value = true
+    isUpdate.value ? await NoticeRequest.update(form.value) : await NoticeRequest.create(form.value)
+    emits('getList')
+    loading.value = false
+    close()
+  } catch (error) {
+    loading.value = false
+    console.log('submit error: ', error)
+  }
+}
+
+defineExpose({ open })
+</script>
+
+<style lang="scss" scoped></style>
+```
+
+**规则:**
+
+- `el-tree-select` 固定放在第一个表单项，`check-strictly` 支持选中任意层级
+- 上级默认值：新增时 `parentId = record ? record.id : '0'`；修改时从详情接口回填
+- 父级数据源通过 `findParentList` 接口获取
+- 对话框标题根据 `isUpdate` 计算：`'新增XX'` / `'修改XX'`
+- 通过 `defineExpose({ open })` 暴露 `open` 方法供父组件调用
+- 表单默认值: `status = CommonConstant.STATUS_NORMAL`
+- 不写任何注释
+
 ### 2-4. 注册提示
+
+**标准模式:**
 
 ```
 🔧 需要手动操作：
@@ -718,4 +1019,21 @@ getList()
      组件路径: system/notice/index
      权限标识: system:notice:query
      菜单图标: Tool
+```
+
+**树形模式:**
+
+```
+🔧 需要手动操作：
+
+1. 在 apps/admin/src/types/index.ts 中添加导出:
+   export * from './api/system/notice'
+
+2. 动态路由（列表页不需要改 router.database.ts）:
+   登录后台 → 菜单管理 → 新增菜单:
+     菜单名称: 分类管理
+     路由地址: notice
+     组件路径: system/notice/index
+     权限标识: system:notice:query
+     菜单图标: TreeTable
 ```
