@@ -12,3 +12,10 @@ allowBuilds:
   ip2region-ts: true
   msgpackr-extract: true
   unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - '@swc/core-linux-x64-musl@1.15.41'
+  - '@swc/core-win32-arm64-msvc@1.15.41'
+  - '@swc/core-win32-ia32-msvc@1.15.41'
+  - '@swc/core-win32-x64-msvc@1.15.41'
+  - nodemailer@8.0.11

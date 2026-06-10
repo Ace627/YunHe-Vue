@@ -1,4 +1,4 @@
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 import 'winston-daily-rotate-file'
 import { resolve } from 'node:path'
 import { formatTime } from '@/utils'

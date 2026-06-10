@@ -13,7 +13,6 @@
     "@yunhe/utils": "workspace:*",
     "echarts": "^6.1.0",
     "element-plus": "^2.14.1",
-    "lodash-es": "^4.18.1",
     "md-editor-v3": "^6.5.1",
     "nprogress": "^0.2.0",
     "pinia": "^3.0.4",
@@ -25,7 +24,6 @@
     "x-markdown-vue": "^0.0.200"
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.12",
     "@types/nprogress": "^0.2.3",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vitejs/plugin-vue-jsx": "5.1.5",
@@ -39,6 +37,6 @@
     "vite": "^8.0.16",
     "vite-plugin-compression": "0.5.1",
     "vite-plugin-svg-icons-ng": "^1.9.1",
-    "vue-tsc": "^3.3.3"
+    "vue-tsc": "^3.3.4"
   }
 }

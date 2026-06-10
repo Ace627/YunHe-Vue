@@ -1,5 +1,5 @@
 import { load } from 'js-yaml'
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 import { resolve } from 'node:path'
 import { readFileSync, existsSync } from 'node:fs'
 

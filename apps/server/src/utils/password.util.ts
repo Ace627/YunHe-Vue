@@ -1,5 +1,5 @@
 import argon2 from 'argon2'
-import { isString } from 'lodash'
+import { isString } from 'lodash-es'
 
 /**
  * 判断密码是否已为 Argon2 加密格式
